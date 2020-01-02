@@ -5,49 +5,10 @@ open Config
 open Types
 
 //// csv file headings
-//let headings = "Buildings,
-//                Current Chair, 
-//                Time to new Chair, 
-//                Current Shelter Rule, 
-//                Current Voting Rule,
-//                Current Food Rule,
-//                Current Work Rule,
-//                Current Max Punishment,
-//                Current Sanction Step Size,
-//                Current Day,
-//                Num Hare,
-//                Num Stag,
-//                Current Rule Set,
-//                All Rules, 
-//                Building Reward Per Day,
-//                Hunting Reward Per Day,
-//                Building Average Total Reward,
-//                Hunting Average Total Reward,
-//                S,
-//                Shunting Energy Split,".Replace("\n","").Replace(" ","")
-//
-//
-//// agent headings duplicated for each agent
-//let agentHeadings = "[ID]Susceptibility,
-//                     [ID]Idealism,
-//                     [ID]Egotism,
-//                     [ID]Gain,
-//                     [ID]Energy Depreciation,
-//                     [ID]Energy Consumed,
-//                     [ID]Infamy,
-//                     [ID]Energy,
-//                     [ID]Hunted Food,
-//                     [ID]Today's Activity,
-//                     [ID]Access To Shelter,
-//                     [ID]Self Confidence,
-//                     [ID]Today's Hunt Option,
-//                     [ID]R,
-//                     [ID]Rhunting Energy Split,
-//                     [ID]Rsharing,
-//                     [ID]Food Sharing,
-//                     [ID]Last Crime Date,
-//                     [ID]Access To Food,
-//                     [ID]Alive,"
+let headings = "CurrentDay,Buildings,CurrentChair,TimeToNewChair,CurrentShelterRule,CurrentVotingRule,CurrentFoodRule,CurrentWorkRule,CurrentMaxPunishment,CurrentSanctionStepSize,NumHare,NumStag,BuildingRewardPerDay,HuntingRewardPerDay,BuildingAverageTotalReward,HuntingAverageTotalReward,"
+
+// agent headings duplicated for each agent
+let agentHeadings = "[ID]Susceptibility,[ID]Idealism,[ID]Egotism,[ID]Fairness,[ID]Gain,[ID]EnergyDepreciation,[ID]EnergyConsumed,[ID]Infamy,[ID]Energy,[ID]HuntedFood,[ID]Today'sActivity,[ID]AccessToShelter,[ID]SelfConfidence,[ID]Today'sHuntOption,[ID]FoodSharing,[ID]LastCrimeDate,[ID]AccessToFood,[ID]Alive,"
 
 let csvdump (world : WorldState) (unsortedAgents : Agent list) (csvwriter : StreamWriter) : WorldState = 
 

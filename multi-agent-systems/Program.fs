@@ -229,17 +229,10 @@ let main argv =
                   writer 
                   csvwriter
 
-    // csv file headings
-    let headings = "CurrentDay,Buildings,CurrentChair,TimeToNewChair,CurrentShelterRule,CurrentVotingRule,CurrentFoodRule,CurrentWorkRule,CurrentMaxPunishment,CurrentSanctionStepSize,NumHare,NumStag,BuildingRewardPerDay,HuntingRewardPerDay,BuildingAverageTotalReward,HuntingAverageTotalReward,"
-    
-    // agent headings duplicated for each agent
-    let agentHeadings = "[ID]Susceptibility,[ID]Idealism,[ID]Egotism,[ID]Fairness,[ID]Gain,[ID]EnergyDepreciation,[ID]EnergyConsumed,[ID]Infamy,[ID]Energy,[ID]HuntedFood,[ID]Today'sActivity,[ID]AccessToShelter,[ID]SelfConfidence,[ID]Today'sHuntOption,[ID]FoodSharing,[ID]LastCrimeDate,[ID]AccessToFood,[ID]Alive,"
-
     let outputTXT = Path.Combine [|".."; ".."; ".."; "output.txt"|]
     let writer = new StreamWriter(outputTXT)
     let outputCSV = Path.Combine [|".."; ".."; ".."; "test.csv"|]
     let csvwriter = new System.IO.StreamWriter(outputCSV)
-    printfn "headings: %s" headings
     csvwriter.Write(headings)
     csvwriter.Write(List.fold (fun acc elem -> acc + agentHeadings.Replace("[ID]",string elem.ID)) "" agents)
     let finalWorld = loop currentWorld agents writer csvwriter
