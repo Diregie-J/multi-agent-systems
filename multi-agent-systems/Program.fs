@@ -127,7 +127,7 @@ let main argv =
             |> List.map (fun el ->
                 let decision = workAllocation el currentWorld // To verify
                 match decision with
-                | 0 -> {el with TodaysActivity = NONE, 1.0}
+                | 0 -> {el with TodaysActivity = NONE, 0.0}
                 | 1 -> 
                     let huntingStrategy = huntStrategyDecision el currentWorld
                     {el with TodaysActivity = HUNTING, 1.0;
