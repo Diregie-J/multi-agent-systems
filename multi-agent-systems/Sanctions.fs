@@ -30,7 +30,9 @@ let idealAllocation (world: WorldState) (agents: Agent list) (totalFoodShared: f
             | Communism -> totalFoodShared / (agents |> List.length |> float)
             | FoodRule.Socialism -> totalFoodShared * (1.0 - el.Energy / totalEnergy)
             | FoodRule.Meritocracy -> totalFoodShared * (snd el.TodaysActivity) / totalEffort
-            | FoodRule.Oligarchy -> el.Energy / totalEnergy * (totalFoodShared - MinimumFoodForOligarchy) + MinimumFoodForOligarchy
+            | FoodRule.Oligarchy -> 
+                let maxAssignmentPerAgent = totalFoodShared / (agents |> List.length |> float) * MinimumFoodForOligarchy
+                el.Energy / totalEnergy * totalFoodShared * (1.0 - MinimumFoodForOligarchy) + maxAssignmentPerAgent
         )
 
     let targetWorkStatus = 

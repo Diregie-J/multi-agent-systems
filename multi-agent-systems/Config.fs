@@ -41,7 +41,9 @@ let nominationThreshold = 0.5
 
 // For Sanctions
 let InfamyStep = 0.1
-let MinimumFoodForOligarchy = 0.5
+
+// MinimumFoodForOligarchy as a fraction of F/N (maximum assignable value equivalent to communism) 
+let MinimumFoodForOligarchy = 1.0
 let CrimeDiscoveryRate = 0.5
 let WorkExemptionThreshold = 0.3
 
