@@ -32,14 +32,18 @@ class MplWidget(QtWidgets.QWidget):
         # do stuff to fig or axes to plot things
         self.canvas.draw()
 
-    def defaultHealthPlot(self, data, numAgents):
-        self.fig.clear(keep_observers=True)
-        self.axes = self.fig.add_subplot(111)
-        for x in range(numAgents):
-            columnTitle = str(x) + "Energy"
-            df.plot(kind="scatter", x="Day", y=columnTitle, ax=self.axes)
+    def defaultEnergyPlot(self, data):
+        self.canvas.fig.clear(keep_observers=True)
+        self.canvas.axes = self.canvas.fig.add_subplot(111)
+        energy = data.filter(regex="Energy$", axis=1)
 
+        energy.apply(lambda x: self.canvas.axes.scatter(x.index, x, c='g'))
 
+        #energy["Average"] = data["Average Energy"]
         
+        #for x in range(numAgents):
+        #    columnTitle = str(x) + "Energy"
+        #    energy.plot(kind="scatter", x="CurrentDay", y=columnTitle, ax=self.axes)
+
 
         self.canvas.draw()

@@ -2,7 +2,6 @@
 
 import pandas as pd
 import matplotlib as plt
-import functools.reduce 
 
 class Model:
     def __init__(self):
@@ -11,11 +10,6 @@ class Model:
         self.maxDays = "0"
         self.plotContent = ""
         self.columns = ""
-    
-    def rGetAttr(self, obj, attr, *args):
-        def _getattr(obj, attr):
-            return getattr(obj, attr, *args)
-        return functools.reduce(_getattr, [obj] + attr.split('.'))
 
     def isValid(self, fileName):
         if fileName.endswith('.csv'):
@@ -48,7 +42,8 @@ class Model:
 
     def addFilter(self, parameter, include=True, value='', num=0, greater=0):
         #gets datatype of column
-        dataType = self.rGetAttr(self.plotContent, parameter + '.dtype')
+        dataType = getattr(self.plotContent, parameter)
+        dataType = getattr(dataType, 'dtype')
         if dataType == 'object':
             # filter strings
             if include:
