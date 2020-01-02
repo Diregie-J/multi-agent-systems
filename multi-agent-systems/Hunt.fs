@@ -50,10 +50,11 @@ let capHare (var: Agent list * WorldState) : Agent list * WorldState =
 
 // Check if stag hunt meets criteria for success
 let meetStagCondition (actProfile : float list): bool =
-
-    let minEnergy actProfile = List.min actProfile >= staggiMinIndividual
-    let thresholdEnergy actProfile = List.sum actProfile >= staggiMinCollective
-    minEnergy actProfile && thresholdEnergy actProfile
+    let minEnergy = List.min actProfile
+    let collectiveEnergy = List.sum actProfile
+    let isSuccessful =
+        minEnergy >= staggiMinIndividual && collectiveEnergy >= staggiMinCollective
+    isSuccessful
 
 // determines how many stags are captured based on input list of energy allocated to hunt
 let capStag (var : Agent list * WorldState) : Agent list * WorldState =
@@ -84,7 +85,7 @@ let capStag (var : Agent list * WorldState) : Agent list * WorldState =
             |> min (world.NumStag |> float)
 
         let avgStagEnergy = 
-            if meetStagCondition actProfile then numStag else 0.0
+            if meetStagCondition actProfile then numStag * staggiEnergyValue else 0.0
             |> fun x -> x / (List.length agents |> float)
 
         let newAgents =
