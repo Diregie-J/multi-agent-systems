@@ -19,7 +19,7 @@ let capHare (var: Agent list * WorldState) : Agent list * WorldState =
             agent.TodaysHuntOption
             |> float
             |> (*) 0.1
-            |> (*) (float costOfWorking)    // Proportion of energy spent on hare
+            |> (*) (float costOfHunting)    // Proportion of energy spent on hare
             |> fun x -> x / rabbosMinRequirement
             |> floor
             |> int
@@ -67,7 +67,7 @@ let capStag (var : Agent list * WorldState) : Agent list * WorldState =
                 |> float
                 |> (*) 0.1
                 |> fun x -> 1.0 - x
-                |> (*) (float costOfWorking)    // Proportion of energy spent on stag
+                |> (*) (float costOfHunting)    // Proportion of energy spent on stag
             )
 
         let maxNumStag =
