@@ -4,6 +4,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QObject, pyqtSlot
 from gui import Ui_MainWindow
 import sys
+import pandas as pd
 from model import Model
 
 class MainWindowUiClass(Ui_MainWindow):
@@ -19,7 +20,7 @@ class MainWindowUiClass(Ui_MainWindow):
 
     def refreshAll(self):
         self.addAgentPushButton.setEnabled(True)
-        self.exportAllButton.setEnabled(True)
+        self.exportAllPushButton.setEnabled(True)
         self.gifButton.setEnabled(True)
         self.daySpinBox.setEnabled(True)
         self.clearAgentsPushButton.setEnabled(True)
@@ -163,9 +164,8 @@ class MainWindowUiClass(Ui_MainWindow):
 
     # default plots
 
-    def defaultHealthSlot(self):
-        # self.x.defaultHealthPlot
-        pass
+    def defaultEnergySlot(self):
+        self.standardPlotWidget.defaultEnergyPlot(self.model.fileContent)
 
     def defaultShelterSlot(self):
         pass
