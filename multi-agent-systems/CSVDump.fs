@@ -1,7 +1,7 @@
 module CSVDump
 
-open System
 open System.IO
+open Config
 open Types
 
 //// csv file headings
@@ -52,6 +52,7 @@ open Types
 let csvdump (world : WorldState) (unsortedAgents : Agent list) (csvwriter : StreamWriter) : WorldState = 
 
     let agents = List.sortBy (fun elem -> elem.ID) unsortedAgents
+    let totalFairness = List.sumBy (fun elem -> elem.Gain) agents + rb * (float numAgents) - 2.0 * List.sumBy (fun elem -> elem.EnergyDeprecation) agents - List.sumBy (fun elem -> elem.EnergyConsumed) agents
 
     // world state dump
     csvwriter.Write("\n")
@@ -102,12 +103,18 @@ let csvdump (world : WorldState) (unsortedAgents : Agent list) (csvwriter : Stre
 
     // dump for a single agent
     let agentDump _ (agent : Agent) : WorldState =
+
         if (agent.Alive) then
+
+            let indivFairness = agent.Gain + rb - 2.0 * agent.EnergyDeprecation - agent.EnergyConsumed
+
             csvwriter.Write(agent.Susceptibility)
             csvwriter.Write(",")
             csvwriter.Write(agent.Idealism)
             csvwriter.Write(",")
             csvwriter.Write(agent.Egotism)
+            csvwriter.Write(",")
+            csvwriter.Write(indivFairness / totalFairness)
             csvwriter.Write(",")
             csvwriter.Write(agent.Gain)
             csvwriter.Write(",")
@@ -144,7 +151,7 @@ let csvdump (world : WorldState) (unsortedAgents : Agent list) (csvwriter : Stre
             csvwriter.Write(agent.Alive)
             csvwriter.Write(",")
         else 
-            csvwriter.Write(",,,,,,,,,,,,,,,,,")
+            csvwriter.Write(",,,,,,,,,,,,,,,,,,")
         
         world
 

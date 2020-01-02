@@ -233,7 +233,7 @@ let main argv =
     let headings = "CurrentDay,Buildings,CurrentChair,TimeToNewChair,CurrentShelterRule,CurrentVotingRule,CurrentFoodRule,CurrentWorkRule,CurrentMaxPunishment,CurrentSanctionStepSize,NumHare,NumStag,BuildingRewardPerDay,HuntingRewardPerDay,BuildingAverageTotalReward,HuntingAverageTotalReward,"
     
     // agent headings duplicated for each agent
-    let agentHeadings = "[ID]Susceptibility,[ID]Idealism,[ID]Egotism,[ID]Gain,[ID]EnergyDepreciation,[ID]EnergyConsumed,[ID]Infamy,[ID]Energy,[ID]HuntedFood,[ID]Today'sActivity,[ID]AccessToShelter,[ID]SelfConfidence,[ID]Today'sHuntOption,[ID]FoodSharing,[ID]LastCrimeDate,[ID]AccessToFood,[ID]Alive,"
+    let agentHeadings = "[ID]Susceptibility,[ID]Idealism,[ID]Egotism,[ID]Fairness,[ID]Gain,[ID]EnergyDepreciation,[ID]EnergyConsumed,[ID]Infamy,[ID]Energy,[ID]HuntedFood,[ID]Today'sActivity,[ID]AccessToShelter,[ID]SelfConfidence,[ID]Today'sHuntOption,[ID]FoodSharing,[ID]LastCrimeDate,[ID]AccessToFood,[ID]Alive,"
 
     let outputTXT = Path.Combine [|".."; ".."; ".."; "output.txt"|]
     let writer = new StreamWriter(outputTXT)
