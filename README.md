@@ -47,4 +47,4 @@ There are 2 ways at the moment:
 
 * With printf see the output in terminal
 
-* The agent and world states are printed every day in a file called output.txt which is in multi-agent-systems\multi-agent-systems. It appears after running the program at least once
+* The agent and world states are printed every day in output files in multi-agent-systems/output. They are numbered 0..n-1 depending on how many times the simulation is run (--number-runs). Also, n csv files are produced as well in a similar fashion in the multi-agent-systems/csv folder.
