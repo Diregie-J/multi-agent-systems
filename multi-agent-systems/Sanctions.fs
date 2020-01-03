@@ -78,18 +78,21 @@ let infamyDecay (world: WorldState) (agents: Agent list) : Agent list =
 let sanction (world: WorldState) (agents: Agent list) : Agent list = 
     agents
     |> List.map (fun el ->
-        if el.Infamy <= 0.2 then {el with AccessToShelter = el.AccessToShelter;
-                                            AccessToFood = true}
-        elif el.Infamy <= 0.5 then {el with AccessToShelter = None;
-                                            AccessToFood = true}
-        elif el.Infamy <= 0.9 then {el with AccessToFood = false;
-                                            AccessToShelter = None}
-        else 
-            match world.CurrentMaxPunishment with 
-            | NoFoodAndShelter -> {el with AccessToFood = false;
-                                            AccessToShelter = None}
-            | Exile -> {el with Alive = false}
-            | _ -> failwith "Invalid maximum punishment setting"
+        if el.LastCrimeDate = world.CurrentDay then
+            if el.Infamy <= 0.2 then {el with AccessToShelter = el.AccessToShelter;
+                                                AccessToFood = true}
+            elif el.Infamy <= 0.5 then {el with AccessToShelter = None;
+                                                AccessToFood = true}
+            elif el.Infamy <= 0.9 then {el with AccessToFood = false;
+                                                AccessToShelter = None}
+            else 
+                match world.CurrentMaxPunishment with 
+                | NoFoodAndShelter -> {el with AccessToFood = false;
+                                                AccessToShelter = None}
+                | Exile -> {el with Alive = false}
+                | _ -> failwith "Invalid maximum punishment setting"
+        else {el with AccessToShelter = el.AccessToShelter;
+                        AccessToFood = true}
     )
 
 
