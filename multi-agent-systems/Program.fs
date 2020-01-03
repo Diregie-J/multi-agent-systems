@@ -20,7 +20,8 @@ let main argv =
         ("ID: ", agent.ID), ("Energy: ", agent.Energy), ("Susceptibility: ", agent.Susceptibility),
         ("Idealism: ", agent.Idealism), ("Egotism: ", agent.Egotism),
         ("Gain: ", agent.Gain), ("EnergyConsumed: ", agent.EnergyConsumed), ("EnergyDeprecation: ", agent.EnergyDeprecation),
-        ("HuntedFood: ", agent.HuntedFood), ("Activity: ", agent.TodaysActivity), ("ShelterAccess: ", agent.AccessToShelter),
+        ("HuntedFood: ", agent.HuntedFood), ("Activity: ", agent.TodaysActivity), 
+        ("ShelterAccess: ", agent.AccessToShelter), ("FoodShared: ", agent.FoodShared), ("HuntOption: ", agent.TodaysHuntOption),
         ("SelfConfidence: ", agent.SelfConfidence), ("LastCrimeDate: ", agent.LastCrimeDate), ("FoodAccess: ", agent.AccessToFood),
         ("Alive: ", agent.Alive), ("OverallRuleOpinion: ", agent.DecisionOpinions.Value.OverallRuleOpinion),
         ("OtherAgentsOpinion: ", List.map (fun (ag, opin) -> ag.ID, opin) agent.DecisionOpinions.Value.AllOtherAgentsOpinion)
