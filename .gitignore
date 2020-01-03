@@ -1,5 +1,7 @@
 ﻿/multi-agent-systems/.vs/multi-agent-systems
 /multi-agent-systems/bin
 /multi-agent-systems/obj
+/multi-agent-systems/*.csv
+/multi-agent-systems/*.txt
 /test/bin
 /test/obj
