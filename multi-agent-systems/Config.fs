@@ -19,13 +19,6 @@ let rabbosProbability = 0.3 // likelihood is 3 in 10 intervals
 let rabbosMinRequirement = costOfHunting * 0.4
 let rabbosMeanRegenRate = 0.1
 
-
-
-let foodSaturation = 40
-
-
-
-
 let eb = 10.0 // energy cost per worker to build
 let em = 2.5 // energy cost per worker to maintain
 let rg = 0.05 // shelter quality decay rate

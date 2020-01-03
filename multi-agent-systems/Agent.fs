@@ -50,7 +50,7 @@ let initialiseAgent (id : int) (susceptibility : float) (egotism : float) (ideal
         Rsharing = [(0.5, 0); (0.5, 0)];
         FoodShared = false;     // Only meaningful for hunters
 
-        LastCrimeDate = 0;
+        LastCrimeDate = -1;
         AccessToFood = true;
         Alive = true;
     }
