@@ -17,12 +17,13 @@ Developed with __dotnetcore 3.0__ (might be compatible w other versions)
 
    In order to run from the command line Baseline Configuration (12 balanced agents, 2 from each other category) use the following command line arguments:
 
-     --number-days -1 --number-profiles 7 --number-agents 24
+     --number-days -1 --number-profiles 7 --number-agents 24 [--number-runs 1]
 
   where:
   * --number-days x -> x is the number of days the simulation runs for, if -1 runs until all agents are dead 
   * --number-profiles x -> x is the number of agent profiles there are (number of profie_ files in the dir multi-agent-systems\Agent-Config\agent_dir)
   * --number-agents x -> x is the number of agents that take part in the simulation initially - this has to be consistent w the number given in the python script
+  * --number-runs x -> optional argument - n is number of times the simulation is repeated (produces x csv files in multi-agent-systems/csv)
   
 # 2. Run the program w your own configuration:
 
