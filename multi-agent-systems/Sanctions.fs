@@ -24,14 +24,15 @@ let idealAllocation (world: WorldState) (agents: Agent list) (totalFoodShared: f
         |> List.sum
     
     let targetEnergyList = 
+        let numAgents = List.length agents |> float
         agents
         |> List.map (fun el ->
             match world.CurrentFoodRule with
-            | Communism -> totalFoodShared / (agents |> List.length |> float)
-            | FoodRule.Socialism -> totalFoodShared * (1.0 - el.Energy / totalEnergy)
+            | Communism -> totalFoodShared / numAgents
+            | FoodRule.Socialism -> totalFoodShared * (1.0 - el.Energy / totalEnergy) / (numAgents - 1.0)
             | FoodRule.Meritocracy -> totalFoodShared * (snd el.TodaysActivity) / totalEffort
             | FoodRule.Oligarchy -> 
-                let maxAssignmentPerAgent = totalFoodShared / (agents |> List.length |> float) * MinimumFoodForOligarchy
+                let maxAssignmentPerAgent = totalFoodShared / numAgents * MinimumFoodForOligarchy
                 el.Energy / totalEnergy * totalFoodShared * (1.0 - MinimumFoodForOligarchy) + maxAssignmentPerAgent
         )
 
