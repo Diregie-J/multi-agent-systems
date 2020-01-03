@@ -58,7 +58,7 @@ let allocateFood (targetEnergyList: float list) (agents: Agent list): Agent list
             let newGain = agent.Gain + energy
             {agent with Energy = agent.Energy + newGain;
                             Gain = newGain}
-        else agent
+        else {agent with Gain = 0.0}
     )
 
 

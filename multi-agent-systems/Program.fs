@@ -169,11 +169,12 @@ let main argv =
         // Resource Allocation
         let agentsAfterResorceAllocation =
             agentsAfterWorking
-            |> allocateFood idealEnergyAssignment
             |> assignShelters currentWorld
         // Sanction
             |> detectCrime currentWorld idealEnergyAssignment idealWorkStatus
             |> sanction currentWorld
+        // Allocate food
+            |> allocateFood idealEnergyAssignment
         // Energy decay due to working
             |> reduceEnergyForWorking
         // End-of-turn energy decay
