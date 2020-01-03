@@ -88,7 +88,7 @@ let capStag (var : Agent list * WorldState) : Agent list * WorldState =
 
         let newAgents =
             agents
-            |> List.map (fun el -> {el with HuntedFood = avgStagEnergy})
+            |> List.map (fun el -> {el with HuntedFood = el.HuntedFood + avgStagEnergy})
 
         (newAgents, {world with NumStag = world.NumStag - (numStag |> int)})
 
@@ -111,7 +111,7 @@ let shareFood (var: Agent list * WorldState) : Agent list * WorldState=
         |> List.map (fun el ->
             match foodSharing el world with
             | 0 -> {el with Gain = el.HuntedFood;
-                            Energy = el.Energy + el.HuntedFood}
+                            FoodShared = false}
             | _ -> {el with Gain = 0.0;
                             FoodShared = true}
         )
