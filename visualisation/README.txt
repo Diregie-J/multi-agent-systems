@@ -25,3 +25,6 @@ Has two positional arguments:
 2) zip
 	- output .zip where you want plots to go
 
+----- Example ----------------
+
+python3 visualiser.py test.csv ~/Documents/yes.zip
