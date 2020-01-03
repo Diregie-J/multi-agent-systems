@@ -3,8 +3,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QObject, pyqtSlot
 from gui import Ui_MainWindow
+from zipfile import ZipFile
 import sys
+from os import remove as DeleteFile
 import pandas as pd
+import matplotlib
+from matplotlib.figure import Figure
 from model import Model
 
 class MainWindowUiClass(Ui_MainWindow):
@@ -46,6 +50,8 @@ class MainWindowUiClass(Ui_MainWindow):
         self.colourComboBox.clear()
         self.colourComboBox.addItems(self.model.getColumns())
         self.lineEdit.setText(self.model.getFileName())
+        self.standardPlotWidget.clear()
+        self.customPlotWidget.clear()
 
     #slots
     def returnPressedSlot(self):
@@ -99,7 +105,20 @@ class MainWindowUiClass(Ui_MainWindow):
         pass
 
     def exportAllSlot(self):
-        pass
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                                'QFileDialog.getSaveFileName()',
+                                                "",
+                                                "ZIP archive (*.zip);;All Files (*)",
+                                                options=options)
+        
+        if not fileName.endswith(".zip"):
+            fileName += ".zip"
+
+        plotNames = self.standardPlotWidget.exportAll(self.model.fileContent, fileName)
+        for plot in plotNames:
+            DeleteFile(plot)
 
     def plotColourSlot(self):
         pass
@@ -165,13 +184,30 @@ class MainWindowUiClass(Ui_MainWindow):
     # default plots
 
     def defaultEnergySlot(self):
-        self.standardPlotWidget.defaultEnergyPlot(self.model.fileContent)
+        self.standardPlotWidget.defaultEnergyPlot(self.model.fileContent, False)
 
     def defaultShelterSlot(self):
         pass
+        #self.standardPlotWidget.defaultShelterPlot(self.model.fileContent, False)
 
     def defaultFoodSlot(self):
         pass
+        #self.standardPlotWidget.defaultFoodPlot(self.model.fileContent, False)
+
+    def defaultEnergyBoxSlot(self):
+        self.standardPlotWidget.defaultEnergyBoxPlot(self.model.fileContent, False)
+
+    def defaultEgotismSlot(self):
+        self.standardPlotWidget.defaultEgotismPlot(self.model.fileContent, False)
+
+    def defaultSusceptibilitySlot(self):
+        self.standardPlotWidget.defaultSusceptibilityPlot(self.model.fileContent, False)
+
+    def defaultIdealismSlot(self):
+        self.standardPlotWidget.defaultIdealismPlot(self.model.fileContent, False)
+
+    def defaultFairnessSlot(self):
+        self.standardPlotWidget.defaultFairnessPlot(self.model.fileContent, False)
 
     def defaultPlaceholderSlot(self):
         pass

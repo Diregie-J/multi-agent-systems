@@ -33,12 +33,32 @@ class Model:
             self.fileContent = ""
             self.fileName = ""
             self.plotContent = ""
-    
+
     def addAverageColumns(self):
         #energy average
-        energyDf = self.fileContent.filter(regex="Energy$", axis=1)
-        averageColumn = energyDf.mean(axis=1)
+        temp = self.fileContent.filter(regex="Energy$", axis=1)
+        averageColumn = temp.mean(axis=1)
         self.fileContent["Average Energy"] = averageColumn
+
+        #egotism average
+        temp = self.fileContent.filter(regex="Egotism$", axis=1)
+        averageColumn = temp.mean(axis=1)
+        self.fileContent["Average Egotism"] = averageColumn
+
+        #susceptibility average
+        temp = self.fileContent.filter(regex="Susceptibility$", axis=1)
+        averageColumn = temp.mean(axis=1)
+        self.fileContent["Average Susceptibility"] = averageColumn
+
+        #idealism average
+        temp = self.fileContent.filter(regex="Idealism$", axis=1)
+        averageColumn = temp.mean(axis=1)
+        self.fileContent["Average Idealism"] = averageColumn
+
+        #fairness average
+        temp = self.fileContent.filter(regex="Fairness$", axis=1)
+        averageColumn = temp.mean(axis=1)
+        self.fileContent["Average Fairness"] = averageColumn
 
     def addFilter(self, parameter, include=True, value='', num=0, greater=0):
         #gets datatype of column
