@@ -44,9 +44,7 @@ let capHare (var: Agent list * WorldState) : Agent list * WorldState =
             {agent with HuntedFood = numHare * rabbosEnergyValue}
         )
 
-    let hareDecrease = hareCapturedPerAgent |> List.sum |> int
-
-    (newAgents, {world with NumHare = world.NumHare - hareDecrease})
+    (newAgents, {world with NumHare = currentNumHare |> int})
 
 // Check if stag hunt meets criteria for success
 let meetStagCondition (actProfile : float list): bool =
