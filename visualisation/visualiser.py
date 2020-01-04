@@ -21,8 +21,8 @@ numRuns = int(args.numRuns)
 def my_autopct(pct):
     return ('%.1f%%' % pct) if pct > 5 else ''
 
-for i in range(0, numRuns):
-    inputPath = os.path.join('..', 'csv', 'test' + str(i) + '.csv')
+for k in range(0, numRuns):
+    inputPath = os.path.join('..', 'csv', 'test' + str(k) + '.csv')
     data = pd.read_csv(inputPath)
 
     plot = plt.figure()
@@ -60,7 +60,7 @@ for i in range(0, numRuns):
     averageColumn = temp.mean(axis=1)
     data["Average Infamy"] = averageColumn
 
-    outName = os.path.join('..', 'csv', str(i) + '.zip')
+    outName = os.path.join('..', 'csv', str(k) + '.zip')
     with ZipFile(outName, "w") as zip:
 
         ######################### crime rate plot #####################
@@ -90,7 +90,7 @@ for i in range(0, numRuns):
         deadAxes.set_ylabel("Number of Dead Agents", color='#ff9999')
         deadAxes.set_ylim(0)
 
-        fig = (plot, "crimeRate.png")
+        fig = (plot, "crimeRate" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -111,7 +111,7 @@ for i in range(0, numRuns):
         axes.set_xlabel("Day")
         axes.set_title("Crimes Committed per Day")
 
-        fig = (plot, "crimeRaw.png")
+        fig = (plot, "crimeRaw" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -127,7 +127,7 @@ for i in range(0, numRuns):
         axes.set_xlabel("Day")
         axes.legend()
 
-        fig = (plot, "ISE.png")
+        fig = (plot, "ISE" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -161,7 +161,7 @@ for i in range(0, numRuns):
         deadAxes.set_ylabel("Number of Dead Agents", color='red')
         deadAxes.set_ylim(0)
 
-        fig = (plot, "averageEnergy.png")
+        fig = (plot, "averageEnergy" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -213,7 +213,7 @@ for i in range(0, numRuns):
         axes.set_ylabel('Agent Energy')
         axes.set_ylim(0, 100)
 
-        fig = (plot, "boxPlotEnergy.png")
+        fig = (plot, "boxPlotEnergy" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -229,7 +229,7 @@ for i in range(0, numRuns):
         axes.set_ylabel("Egotism")
         axes.set_title("Average Agent Egotism")
 
-        fig = (plot, "egotism.png")
+        fig = (plot, "egotism" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -245,7 +245,7 @@ for i in range(0, numRuns):
         axes.set_ylabel("Susceptibility")
         axes.set_title("Average Agent Susceptibility")
 
-        fig = (plot, "susceptibility.png")
+        fig = (plot, "susceptibility" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -261,7 +261,7 @@ for i in range(0, numRuns):
         axes.set_ylabel("Idealism")
         axes.set_title("Average Agent Idealism")
 
-        fig = (plot, "idealism.png")
+        fig = (plot, "idealism" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -312,7 +312,7 @@ for i in range(0, numRuns):
         axes.set_xlabel('Day')
         axes.set_ylabel('Agent Fairness')
 
-        fig = (plot, "fairness.png")
+        fig = (plot, "fairness" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -328,7 +328,7 @@ for i in range(0, numRuns):
         axes.set_ylabel("Infamy")
         axes.set_title("Average Agent Infamy")
 
-        fig = (plot, "infamy.png")
+        fig = (plot, "infamy" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -380,7 +380,7 @@ for i in range(0, numRuns):
         axes.set_ylabel('Agent Infamy')
         axes.set_ylim(0)
 
-        fig = (plot, "boxPlotInfamy.png")
+        fig = (plot, "boxPlotInfamy" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -436,7 +436,7 @@ for i in range(0, numRuns):
         axes.set_yticklabels(["Socialism", "Meritocracy", "Oligarchy", "Random"])
         plt.tight_layout()
 
-        fig = (plot, "shelterRule.png")
+        fig = (plot, "shelterRule" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -486,7 +486,7 @@ for i in range(0, numRuns):
         axes.axis('equal')
         axes.set_title('Shelter Rule Proportions')
 
-        fig = (plot, "shelterRulePie.png")
+        fig = (plot, "shelterRulePie" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -542,7 +542,7 @@ for i in range(0, numRuns):
         axes.set_yticklabels(["Socialism", "Meritocracy", "Oligarchy", "Communism"])
         plt.tight_layout()
 
-        fig = (plot, "foodRule.png")
+        fig = (plot, "foodRule" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -592,7 +592,7 @@ for i in range(0, numRuns):
         axes.axis('equal')
         axes.set_title('Food Rule Proportions')
 
-        fig = (plot, "foodRulePie.png")
+        fig = (plot, "foodRulePie" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -642,7 +642,7 @@ for i in range(0, numRuns):
         axes.set_yticklabels(["Strongest", "By Choice", "Everyone"])
         plt.tight_layout()
 
-        fig = (plot, "workRule.png")
+        fig = (plot, "workRule" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -685,7 +685,7 @@ for i in range(0, numRuns):
         axes.axis('equal')
         axes.set_title('Work Rule Proportions')
 
-        fig = (plot, "workRulePie.png")
+        fig = (plot, "workRulePie" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -741,7 +741,7 @@ for i in range(0, numRuns):
         axes.set_yticklabels(["Borda", "Approval", "Instant Runoff", "Plurality"])
         plt.tight_layout()
 
-        fig = (plot, "votingRule.png")
+        fig = (plot, "votingRule" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -791,7 +791,7 @@ for i in range(0, numRuns):
         axes.axis('equal')
         axes.set_title('Voting Rule Proportions')
 
-        fig = (plot, "votingRulePie.png")
+        fig = (plot, "votingRulePie" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -847,7 +847,7 @@ for i in range(0, numRuns):
         axes.set_yticklabels(["No Food and Shelter", "Increment", "Decrement", "Exile"])
         plt.tight_layout()
 
-        fig = (plot, "punishmentRule.png")
+        fig = (plot, "punishmentRule" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -897,7 +897,7 @@ for i in range(0, numRuns):
         axes.axis('equal')
         axes.set_title('Maximum Punishment Proportions')
 
-        fig = (plot, "punishmentRulePie.png")
+        fig = (plot, "punishmentRulePie" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -942,7 +942,7 @@ for i in range(0, numRuns):
         axes.set_title("Agent Activity Breakdown per Day")
         axes.legend((noneBar[0], huntingBar[0], buildingBar[0]), ("None", "Hunting", "Building"))
 
-        fig = (plot, "activityBreakdown.png")
+        fig = (plot, "activityBreakdown" + str(k) + ".png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
