@@ -40,7 +40,7 @@ let private parseProfile (fileName : string) : Agent list =
     List.map(fun number -> initialiseAgent number ((float)agentParsed.Susceptibility.[number - start]) ((float)agentParsed.Egotism.[number - start]) ((float)agentParsed.Idealism.[number - start])) (Array.toList agentParsed.IdRange)
  
 let private parseAgents (numberProfiles : int) : Agent list =
-    let path : string = "Agent-Config/agent_dir/profile"
+    let path : string = "../../../Agent-Config/agent_dir/profile"
     let jsonSuffix : string = ".json" 
     let fileNames =  [0..numberProfiles-1] |> List.map string |> List.map (fun key -> path + key + jsonSuffix)
     initialiseAgentDecisions (List.concat (List.map(fun file -> parseProfile file) fileNames))

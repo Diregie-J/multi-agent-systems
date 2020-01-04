@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Compile Include="Config.fs" />
-    <Compile Include="ConfigEx.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Sanctions.fs" />
     <Compile Include="Election.fs" />
