@@ -2,6 +2,7 @@
 
 import matplotlib
 import pandas as pd
+import numpy as np
 matplotlib.use('Qt5Agg')
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as Canvas
@@ -35,7 +36,95 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.draw()
 
     def defaultTestPlot(self, data, save):
-        self.defaultVotingRulePlot(data, False)
+        self.defaultShelterRulePie(data, False)
+
+    def defaultShelterRulePie(self, data, save):
+        self.clear()
+
+        labels = ['Random', 'Oligarchy', 'Meritocracy', 'Socialism']
+        colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+        explode = (0.05,0.05,0.05,0.05)
+        sizes = []
+        occurences = data["CurrentShelterRule"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Random"])
+        except:
+            temp = 0
+        sizes.append(temp)
+
+        try:
+            temp = occurences.loc["Oligarchy"]
+        except:
+            temp = 0
+        sizes.append(temp)
+
+        try:
+            temp = occurences.loc["Meritocracy"]
+        except:
+            temp = 0
+        sizes.append(temp)
+
+        try:
+            temp = occurences.loc["Socialism"]
+        except:
+            temp = 0
+        sizes.append(temp)
+        
+        self.canvas.axes.pie(sizes, colors = colors, labels=labels, autopct='%1.1f%%', startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        self.canvas.axes.add_patch(centre_circle)
+        self.canvas.axes.axis('equal')  
+        self.canvas.fig.tight_layout()
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+
+    def defaultActivityPlot(self, data, save):
+        self.clear()
+
+        activity = data.filter(regex="Today'sActivity$", axis=1)
+        
+        none = []
+        hunting = []
+        building = []
+
+        for x in range(len(activity.T.columns)):
+            occurences = activity.T[x].value_counts()
+            
+            try:
+                temp = occurences.loc["NONE"]
+            except:
+                temp = 0
+            none.append(temp)
+
+            try:
+                temp = occurences.loc["HUNTING"]
+            except:
+                temp = 0
+            hunting.append(temp)
+
+            try:
+                temp = occurences.loc["BUILDING"]
+            except:
+                temp = 0
+            building.append(temp)
+
+        noneBar = self.canvas.axes.bar(data["CurrentDay"], none, 0.85, color="#ff9999")
+        huntingBar = self.canvas.axes.bar(data["CurrentDay"], hunting, 0.85, bottom=none, color="#99ff99")
+        buildingBar = self.canvas.axes.bar(data["CurrentDay"], building, 0.85, bottom=np.array(none)+np.array(hunting), color="#66b3ff")
+        self.canvas.axes.set_ylabel("Number of Agents")
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.set_title("Agent Activity Breakdown per Day")
+        self.canvas.axes.legend((noneBar[0], huntingBar[0], buildingBar[0]), ("None", "Hunting", "Building"))
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
     
     def defaultWorkRulePlot(self, data, save):
         self.clear()
@@ -61,9 +150,9 @@ class MplWidget(QtWidgets.QWidget):
                 watch = x
             count += 1
         
-        self.canvas.axes.broken_barh(strongest, (13,5), facecolors='tab:blue')
-        self.canvas.axes.broken_barh(byChoice, (23,5), facecolors='tab:green')
-        self.canvas.axes.broken_barh(everyone, (33,5), facecolors='tab:red')
+        self.canvas.axes.broken_barh(strongest, (13,5), facecolors='#66b3ff')
+        self.canvas.axes.broken_barh(byChoice, (23,5), facecolors='#99ff99')
+        self.canvas.axes.broken_barh(everyone, (33,5), facecolors='#ff9999')
         self.canvas.axes.set_xlabel("Day")
         self.canvas.axes.set_ylabel("Work Rule")
         self.canvas.axes.set_title("Work Rule During Simulation")
@@ -104,10 +193,10 @@ class MplWidget(QtWidgets.QWidget):
                 watch = x
             count += 1
         
-        self.canvas.axes.broken_barh(noFoodAndShelter, (13,5), facecolors='tab:blue')
-        self.canvas.axes.broken_barh(increment, (23,5), facecolors='tab:green')
-        self.canvas.axes.broken_barh(decrement, (33,5), facecolors='tab:orange')
-        self.canvas.axes.broken_barh(exile, (43,5), facecolors='tab:red')
+        self.canvas.axes.broken_barh(noFoodAndShelter, (13,5), facecolors='#66b3ff')
+        self.canvas.axes.broken_barh(increment, (23,5), facecolors='#99ff99')
+        self.canvas.axes.broken_barh(decrement, (33,5), facecolors='#ffcc99')
+        self.canvas.axes.broken_barh(exile, (43,5), facecolors='#ff9999')
         self.canvas.axes.set_xlabel("Day")
         self.canvas.axes.set_ylabel("Maximum Punishment")
         self.canvas.axes.set_title("Maximum Punishment During Simulation")
@@ -158,10 +247,10 @@ class MplWidget(QtWidgets.QWidget):
         else:
             instantRunoff.append((start, count))
         
-        self.canvas.axes.broken_barh(borda, (13,5), facecolors='tab:blue')
-        self.canvas.axes.broken_barh(approval, (23,5), facecolors='tab:green')
-        self.canvas.axes.broken_barh(instantRunoff, (33,5), facecolors='tab:orange')
-        self.canvas.axes.broken_barh(plurality, (43,5), facecolors='tab:red')
+        self.canvas.axes.broken_barh(borda, (13,5), facecolors='#66b3ff')
+        self.canvas.axes.broken_barh(approval, (23,5), facecolors='#99ff99')
+        self.canvas.axes.broken_barh(instantRunoff, (33,5), facecolors='#ffcc99')
+        self.canvas.axes.broken_barh(plurality, (43,5), facecolors='#ff9999')
         self.canvas.axes.set_xlabel("Day")
         self.canvas.axes.set_ylabel("Voting Rule")
         self.canvas.axes.set_title("Voting Rule During Simulation")
@@ -202,10 +291,10 @@ class MplWidget(QtWidgets.QWidget):
                 watch = x
             count += 1
         
-        self.canvas.axes.broken_barh(socialism, (13,5), facecolors='tab:blue')
-        self.canvas.axes.broken_barh(meritocracy, (23,5), facecolors='tab:green')
-        self.canvas.axes.broken_barh(oligarchy, (33,5), facecolors='tab:orange')
-        self.canvas.axes.broken_barh(communism, (43,5), facecolors='tab:red')
+        self.canvas.axes.broken_barh(socialism, (13,5), facecolors='#66b3ff')
+        self.canvas.axes.broken_barh(meritocracy, (23,5), facecolors='#99ff99')
+        self.canvas.axes.broken_barh(oligarchy, (33,5), facecolors='#ffcc99')
+        self.canvas.axes.broken_barh(communism, (43,5), facecolors='#ff9999')
         self.canvas.axes.set_xlabel("Day")
         self.canvas.axes.set_ylabel("Food Rule")
         self.canvas.axes.set_title("Food Rule During Simulation")
@@ -246,10 +335,10 @@ class MplWidget(QtWidgets.QWidget):
                 watch = x
             count += 1
         
-        self.canvas.axes.broken_barh(socialism, (13,5), facecolors='tab:blue')
-        self.canvas.axes.broken_barh(meritocracy, (23,5), facecolors='tab:green')
-        self.canvas.axes.broken_barh(oligarchy, (33,5), facecolors='tab:orange')
-        self.canvas.axes.broken_barh(random, (43,5), facecolors='tab:red')
+        self.canvas.axes.broken_barh(socialism, (13,5), facecolors='#66b3ff')
+        self.canvas.axes.broken_barh(meritocracy, (23,5), facecolors='#99ff99')
+        self.canvas.axes.broken_barh(oligarchy, (33,5), facecolors='#ffcc99')
+        self.canvas.axes.broken_barh(random, (43,5), facecolors='#ff9999')
         self.canvas.axes.set_xlabel("Day")
         self.canvas.axes.set_ylabel("Shelter Rule")
         self.canvas.axes.set_title("Shelter Rule During Simulation")
