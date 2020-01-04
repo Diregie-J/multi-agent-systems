@@ -56,7 +56,7 @@ for i in range(0, numRuns):
     data["Average Fairness"] = averageColumn
 
     #infamy average
-    temp = data.filter(regex="Fairness$", axis=1)
+    temp = data.filter(regex="Infamy$", axis=1)
     averageColumn = temp.mean(axis=1)
     data["Average Infamy"] = averageColumn
 

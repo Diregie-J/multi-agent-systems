@@ -39,7 +39,7 @@ class MplWidget(QtWidgets.QWidget):
         return ('%.1f%%' % pct) if pct > 5 else ''
     
     def defaultTestPlot(self, data, save):
-        self.defaultInfamyBoxPlot(data, False)
+        self.defaultInfamyPlot(data, False)
 
     def defaultInfamyBoxPlot(self, data, save):
         self.clear()
