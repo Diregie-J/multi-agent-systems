@@ -22,19 +22,22 @@ let idealAllocation (world: WorldState) (agents: Agent list) (totalFoodShared: f
         agents
         |> List.map (fun el -> snd el.TodaysActivity)
         |> List.sum
-    
-    let targetEnergyList = 
-        let numAgents = List.length agents |> float
-        agents
-        |> List.map (fun el ->
-            match world.CurrentFoodRule with
-            | Communism -> totalFoodShared / numAgents
-            | FoodRule.Socialism -> totalFoodShared * (1.0 - el.Energy / totalEnergy) / (numAgents - 1.0)
-            | FoodRule.Meritocracy -> totalFoodShared * (snd el.TodaysActivity) / totalEffort
-            | FoodRule.Oligarchy -> 
-                let maxAssignmentPerAgent = totalFoodShared / numAgents * MinimumFoodForOligarchy
-                el.Energy / totalEnergy * totalFoodShared * (1.0 - MinimumFoodForOligarchy) + maxAssignmentPerAgent
-        )
+
+    let targetEnergyList =
+        if totalFoodShared <= 0.0 then
+            List.map (fun _ -> 0.0) [0..(List.length agents-1)]
+        else    
+            let numAgents = List.length agents |> float
+            agents
+            |> List.map (fun el ->
+                match world.CurrentFoodRule with
+                | Communism -> totalFoodShared / numAgents
+                | FoodRule.Socialism -> totalFoodShared * (1.0 - el.Energy / totalEnergy) / (numAgents - 1.0)
+                | FoodRule.Meritocracy -> totalFoodShared * (snd el.TodaysActivity) / totalEffort
+                | FoodRule.Oligarchy -> 
+                    let maxAssignmentPerAgent = totalFoodShared / numAgents * MinimumFoodForOligarchy
+                    el.Energy / totalEnergy * totalFoodShared * (1.0 - MinimumFoodForOligarchy) + maxAssignmentPerAgent
+            )
 
     let targetWorkStatus = 
         agents
@@ -55,7 +58,7 @@ let allocateFood (targetEnergyList: float list) (agents: Agent list): Agent list
     |> List.map (fun (agent, energy) ->
         if agent.AccessToFood = true
         then 
-            let newGain = agent.Gain + energy
+            let newGain = min (agent.Gain + energy) (AgentMaxEnergy - agent.Energy) // Limit gain to the current energy headroom
             {agent with Energy = agent.Energy + newGain;
                             Gain = newGain}
         else {agent with Gain = 0.0}
