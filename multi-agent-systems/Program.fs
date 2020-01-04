@@ -115,12 +115,13 @@ let main argv =
         |> updateNoneAgentStates
 
     let rec loop (currentWorld : WorldState) (agents : Agent list) (writer : StreamWriter) (csvwriter : StreamWriter) : WorldState =
+
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
 
         // Duma session
         let currentWorld = fullDuma livingAgents currentWorld
-        
+
         // Work allocation
         let agentsWithJobs =
             livingAgents
@@ -189,12 +190,11 @@ let main argv =
                                      |> updateRuleOpinion
                                      |> updateRewardsForEveryRuleForAgent currentWorld
         let currentWorld = normaliseTheSocialGood (updateSocialGoodForEveryCurrentRule  opinionChangesAgents currentWorld)
-        
+
         let normalisedAgentArrays = normaliseTheAgentArrays opinionChangesAgents
                                      |> updateAggregationArrayForAgent currentWorld
                                      |> workOpinions currentWorld
                                      |> selfConfidenceUpdate
-            
         // After sanction, agent may die
         let deadAgentsAfterToday = 
             deadAgents @ (normalisedAgentArrays |> List.filter (fun el -> el.Alive = false || el.Energy <= 0.0))
