@@ -185,5 +185,303 @@ for i in range(0, numRuns):
         zip.write(fig[1])
         plotNames.append(fig[1])
 
+        ###################### Infamy plot ####################################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        axes.plot(data["CurrentDay"], data["Average Infamy"], color='blue')
+        axes.set_ylim(0,1)
+        axes.set_xlabel("Day")
+        axes.set_ylabel("Infamy")
+        axes.set_title("Average Agent Infamy")
+
+        fig = (plot, "infamy.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
+        ######################## Shelter rule plot ############################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        random = []
+        oligarchy = []
+        meritocracy = []
+        socialism = []
+
+        watch = data.iloc[0]["CurrentShelterRule"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentShelterRule"]):
+            if x != watch:
+                if watch == "Random":
+                    random.append((start, count))
+                elif watch == "Socialism":
+                    socialism.append((start, count))
+                elif watch == "Oligarchy":
+                    meritocracy.append((start, count))
+                else:
+                    oligarchy.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+
+        watch = data.iloc[-1]["CurrentShelterRule"]      
+        if watch == "Random":
+            random.append((start, count))
+        elif watch == "Socialism":
+            socialism.append((start, count))
+        elif watch == "Oligarchy":
+            meritocracy.append((start, count))
+        else:
+            oligarchy.append((start, count))
+
+        axes.broken_barh(socialism, (13,5), facecolors='tab:blue')
+        axes.broken_barh(meritocracy, (23,5), facecolors='tab:green')
+        axes.broken_barh(oligarchy, (33,5), facecolors='tab:orange')
+        axes.broken_barh(random, (43,5), facecolors='tab:red')
+        axes.set_xlabel("Day")
+        axes.set_ylabel("Shelter Rule")
+        axes.set_title("Shelter Rule During Simulation")
+        axes.set_ylim(5, 55)
+        axes.set_yticks([15, 25, 35, 45])
+        axes.set_yticklabels(["Socialism", "Meritocracy", "Oligarchy", "Random"])
+        plt.tight_layout()
+
+        fig = (plot, "shelterRule.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
+        ################### Shelter rule pie #############################
+
+        ################### Food rule plot ###############################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        communism = []
+        oligarchy = []
+        meritocracy = []
+        socialism = []
+
+        watch = data.iloc[0]["CurrentFoodRule"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentFoodRule"]):
+            if x != watch:
+                if watch == "Communism":
+                    communism.append((start, count))
+                elif watch == "Socialism":
+                    socialism.append((start, count))
+                elif watch == "Oligarchy":
+                    meritocracy.append((start, count))
+                else:
+                    oligarchy.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+        
+        watch = data.iloc[-1]["CurrentFoodRule"]
+        if watch == "Communism":
+            communism.append((start, count))
+        elif watch == "Socialism":
+            socialism.append((start, count))
+        elif watch == "Oligarchy":
+            meritocracy.append((start, count))
+        else:
+            oligarchy.append((start, count))
+
+        axes.broken_barh(socialism, (13,5), facecolors='tab:blue')
+        axes.broken_barh(meritocracy, (23,5), facecolors='tab:green')
+        axes.broken_barh(oligarchy, (33,5), facecolors='tab:orange')
+        axes.broken_barh(communism, (43,5), facecolors='tab:red')
+        axes.set_xlabel("Day")
+        axes.set_ylabel("Food Rule")
+        axes.set_title("Food Rule During Simulation")
+        axes.set_ylim(5, 55)
+        axes.set_yticks([15, 25, 35, 45])
+        axes.set_yticklabels(["Socialism", "Meritocracy", "Oligarchy", "Communism"])
+        plt.tight_layout()
+
+        fig = (plot, "foodRule.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
+        ######################### food rule pie ##################################
+
+        ######################### work rule plot #################################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        everyone = []
+        strongest = []
+        byChoice = []
+
+        watch = data.iloc[0]["CurrentWorkRule"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentWorkRule"]):
+            if x != watch:
+                if watch == "Everyone":
+                    everyone.append((start, count))
+                elif watch == "Strongest":
+                    strongest.append((start, count))
+                else:
+                    byChoice.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+        
+        watch = data.iloc[-1]["CurrentWorkRule"]
+        if watch == "Everyone":
+            everyone.append((start, count))
+        elif watch == "Strongest":
+            strongest.append((start, count))
+        else:
+            byChoice.append((start, count))
+
+        axes.broken_barh(strongest, (13,5), facecolors='tab:blue')
+        axes.broken_barh(byChoice, (23,5), facecolors='tab:green')
+        axes.broken_barh(everyone, (33,5), facecolors='tab:red')
+        axes.set_xlabel("Day")
+        axes.set_ylabel("Work Rule")
+        axes.set_title("Work Rule During Simulation")
+        axes.set_ylim(5, 45)
+        axes.set_yticks([15, 25, 35])
+        axes.set_yticklabels(["Strongest", "By Choice", "Everyone"])
+        plt.tight_layout()
+
+        fig = (plot, "workRule.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
+        ############################## work rule pie #############################
+
+        ######################### voting rule plot ###############################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        borda = []
+        instantRunoff = []
+        plurality = []
+        approval = []
+
+        watch = data.iloc[0]["CurrentVotingRule"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentVotingRule"]):
+            if x != watch:
+                if watch == "Borda":
+                    borda.append((start, count))
+                elif watch == "Approval":
+                    approval.append((start, count))
+                elif watch == "Plurality":
+                    plurality.append((start, count))
+                else:
+                    instantRunoff.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+
+        watch = data.iloc[-1]["CurrentVotingRule"]
+        if watch == "Borda":
+            borda.append((start, count))
+        elif watch == "Approval":
+            approval.append((start, count))
+        elif watch == "Plurality":
+            plurality.append((start, count))
+        else:
+            instantRunoff.append((start, count))
+        
+        axes.broken_barh(borda, (13,5), facecolors='tab:blue')
+        axes.broken_barh(approval, (23,5), facecolors='tab:green')
+        axes.broken_barh(instantRunoff, (33,5), facecolors='tab:orange')
+        axes.broken_barh(plurality, (43,5), facecolors='tab:red')
+        axes.set_xlabel("Day")
+        axes.set_ylabel("Voting Rule")
+        axes.set_title("Voting Rule During Simulation")
+        axes.set_ylim(5, 55)
+        axes.set_yticks([15, 25, 35, 45])
+        axes.set_yticklabels(["Borda", "Approval", "Instant Runoff", "Plurality"])
+        plt.tight_layout()
+
+        fig = (plot, "votingRule.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
+        ########################### voting rule pie ###############################
+
+        ##################### punishment rule plot ################################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        noFoodAndShelter = []
+        exile = []
+        increment = []
+        decrement = []
+
+        watch = data.iloc[0]["CurrentMaxPunishment"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentMaxPunishment"]):
+            if x != watch:
+                if watch == "Exile":
+                    exile.append((start, count))
+                elif watch == "Increment":
+                    increment.append((start, count))
+                elif watch == "Decrement":
+                    decrement.append((start, count))
+                else:
+                    noFoodAndShelter.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+
+        watch = data.iloc[-1]["CurrentMaxPunishment"]
+        if watch == "Exile":
+            exile.append((start, count))
+        elif watch == "Increment":
+            increment.append((start, count))
+        elif watch == "Decrement":
+            decrement.append((start, count))
+        else:
+            noFoodAndShelter.append((start, count))
+        
+        axes.broken_barh(noFoodAndShelter, (13,5), facecolors='tab:blue')
+        axes.broken_barh(increment, (23,5), facecolors='tab:green')
+        axes.broken_barh(decrement, (33,5), facecolors='tab:orange')
+        axes.broken_barh(exile, (43,5), facecolors='tab:red')
+        axes.set_xlabel("Day")
+        axes.set_ylabel("Maximum Punishment")
+        axes.set_title("Maximum Punishment During Simulation")
+        axes.set_ylim(5, 55)
+        axes.set_yticks([15, 25, 35, 45])
+        axes.set_yticklabels(["No Food and Shelter", "Increment", "Decrement", "Exile"])
+        plt.tight_layout()
+
+        fig = (plot, "punishmentRule.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
     for plot in plotNames:
         DeleteFile(plot)

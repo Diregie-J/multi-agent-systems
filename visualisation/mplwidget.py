@@ -34,6 +34,249 @@ class MplWidget(QtWidgets.QWidget):
         # do stuff to fig or axes to plot things
         self.canvas.draw()
 
+    def defaultTestPlot(self, data, save):
+        self.defaultVotingRulePlot(data, False)
+    
+    def defaultWorkRulePlot(self, data, save):
+        self.clear()
+
+        everyone = []
+        strongest = []
+        byChoice = []
+
+        watch = data.iloc[0]["CurrentWorkRule"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentWorkRule"]):
+            if x != watch:
+                if watch == "Everyone":
+                    everyone.append((start, count))
+                elif watch == "Strongest":
+                    strongest.append((start, count))
+                else:
+                    byChoice.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+        
+        self.canvas.axes.broken_barh(strongest, (13,5), facecolors='tab:blue')
+        self.canvas.axes.broken_barh(byChoice, (23,5), facecolors='tab:green')
+        self.canvas.axes.broken_barh(everyone, (33,5), facecolors='tab:red')
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.set_ylabel("Work Rule")
+        self.canvas.axes.set_title("Work Rule During Simulation")
+        self.canvas.axes.set_ylim(5, 45)
+        self.canvas.axes.set_yticks([15, 25, 35])
+        self.canvas.axes.set_yticklabels(["Strongest", "By Choice", "Everyone"])
+        self.canvas.fig.tight_layout()
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultPunishmentRulePlot(self, data, save):
+        self.clear()
+
+        noFoodAndShelter = []
+        exile = []
+        increment = []
+        decrement = []
+
+        watch = data.iloc[0]["CurrentMaxPunishment"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentMaxPunishment"]):
+            if x != watch:
+                if watch == "Exile":
+                    exile.append((start, count))
+                elif watch == "Increment":
+                    increment.append((start, count))
+                elif watch == "Decrement":
+                    decrement.append((start, count))
+                else:
+                    noFoodAndShelter.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+        
+        self.canvas.axes.broken_barh(noFoodAndShelter, (13,5), facecolors='tab:blue')
+        self.canvas.axes.broken_barh(increment, (23,5), facecolors='tab:green')
+        self.canvas.axes.broken_barh(decrement, (33,5), facecolors='tab:orange')
+        self.canvas.axes.broken_barh(exile, (43,5), facecolors='tab:red')
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.set_ylabel("Maximum Punishment")
+        self.canvas.axes.set_title("Maximum Punishment During Simulation")
+        self.canvas.axes.set_ylim(5, 55)
+        self.canvas.axes.set_yticks([15, 25, 35, 45])
+        self.canvas.axes.set_yticklabels(["No Food and Shelter", "Increment", "Decrement", "Exile"])
+        self.canvas.fig.tight_layout()
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultVotingRulePlot(self, data, save):
+        self.clear()
+
+        borda = []
+        instantRunoff = []
+        plurality = []
+        approval = []
+
+        watch = data.iloc[0]["CurrentVotingRule"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentVotingRule"]):
+            if x != watch:
+                if watch == "Borda":
+                    borda.append((start, count))
+                elif watch == "Approval":
+                    approval.append((start, count))
+                elif watch == "Plurality":
+                    plurality.append((start, count))
+                else:
+                    instantRunoff.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+
+        watch = data.iloc[-1]["CurrentVotingRule"]
+        if watch == "Borda":
+            borda.append((start, count))
+        elif watch == "Approval":
+            approval.append((start, count))
+        elif watch == "Plurality":
+            plurality.append((start, count))
+        else:
+            instantRunoff.append((start, count))
+        
+        self.canvas.axes.broken_barh(borda, (13,5), facecolors='tab:blue')
+        self.canvas.axes.broken_barh(approval, (23,5), facecolors='tab:green')
+        self.canvas.axes.broken_barh(instantRunoff, (33,5), facecolors='tab:orange')
+        self.canvas.axes.broken_barh(plurality, (43,5), facecolors='tab:red')
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.set_ylabel("Voting Rule")
+        self.canvas.axes.set_title("Voting Rule During Simulation")
+        self.canvas.axes.set_ylim(5, 55)
+        self.canvas.axes.set_yticks([15, 25, 35, 45])
+        self.canvas.axes.set_yticklabels(["Borda", "Approval", "Instant Runoff", "Plurality"])
+        self.canvas.fig.tight_layout()
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultFoodRulePlot(self, data, save):
+        self.clear()
+
+        communism = []
+        oligarchy = []
+        meritocracy = []
+        socialism = []
+
+        watch = data.iloc[0]["CurrentFoodRule"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentFoodRule"]):
+            if x != watch:
+                if watch == "Communism":
+                    communism.append((start, count))
+                elif watch == "Socialism":
+                    socialism.append((start, count))
+                elif watch == "Oligarchy":
+                    meritocracy.append((start, count))
+                else:
+                    oligarchy.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+        
+        self.canvas.axes.broken_barh(socialism, (13,5), facecolors='tab:blue')
+        self.canvas.axes.broken_barh(meritocracy, (23,5), facecolors='tab:green')
+        self.canvas.axes.broken_barh(oligarchy, (33,5), facecolors='tab:orange')
+        self.canvas.axes.broken_barh(communism, (43,5), facecolors='tab:red')
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.set_ylabel("Food Rule")
+        self.canvas.axes.set_title("Food Rule During Simulation")
+        self.canvas.axes.set_ylim(5, 55)
+        self.canvas.axes.set_yticks([15, 25, 35, 45])
+        self.canvas.axes.set_yticklabels(["Socialism", "Meritocracy", "Oligarchy", "Communism"])
+        self.canvas.fig.tight_layout()
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultShelterRulePlot(self, data, save):
+        self.clear()
+
+        random = []
+        oligarchy = []
+        meritocracy = []
+        socialism = []
+
+        watch = data.iloc[0]["CurrentShelterRule"]
+        start = 1
+        count = 0
+
+        for i, x in enumerate(data["CurrentShelterRule"]):
+            if x != watch:
+                if watch == "Random":
+                    random.append((start, count))
+                elif watch == "Socialism":
+                    socialism.append((start, count))
+                elif watch == "Oligarchy":
+                    meritocracy.append((start, count))
+                else:
+                    oligarchy.append((start, count))
+                start = i+1
+                count = 0
+                watch = x
+            count += 1
+        
+        self.canvas.axes.broken_barh(socialism, (13,5), facecolors='tab:blue')
+        self.canvas.axes.broken_barh(meritocracy, (23,5), facecolors='tab:green')
+        self.canvas.axes.broken_barh(oligarchy, (33,5), facecolors='tab:orange')
+        self.canvas.axes.broken_barh(random, (43,5), facecolors='tab:red')
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.set_ylabel("Shelter Rule")
+        self.canvas.axes.set_title("Shelter Rule During Simulation")
+        self.canvas.axes.set_ylim(5, 55)
+        self.canvas.axes.set_yticks([15, 25, 35, 45])
+        self.canvas.axes.set_yticklabels(["Socialism", "Meritocracy", "Oligarchy", "Random"])
+        self.canvas.fig.tight_layout()
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultInfamyPlot(self, data, save):
+        self.clear()
+        self.canvas.axes.plot(data["CurrentDay"], data["Average Infamy"], color='blue')
+        self.canvas.axes.set_ylim(0,1)
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.set_ylabel("Infamy")
+        self.canvas.axes.set_title("Average Agent Infamy")
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+
     def defaultEnergyPlot(self, data, save):
         self.clear()
         energy = data.filter(regex="Energy$", axis=1)
@@ -189,6 +432,12 @@ class MplWidget(QtWidgets.QWidget):
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
+
+            fig = ((self.defaultInfamyPlot(data, True), "infamy.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+            
         self.clear()
         self.canvas.draw()
         return plotNames

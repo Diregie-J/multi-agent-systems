@@ -210,7 +210,7 @@ class MainWindowUiClass(Ui_MainWindow):
         self.standardPlotWidget.defaultFairnessPlot(self.model.fileContent, False)
 
     def defaultPlaceholderSlot(self):
-        pass
+        self.standardPlotWidget.defaultTestPlot(self.model.fileContent, False)
 
         
 
@@ -222,4 +222,5 @@ def main():
     MainWindow.show()
     sys.exit(app.exec_())
 
-main()
+if __name__ == '__main__':
+    main()

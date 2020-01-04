@@ -1,7 +1,9 @@
 # model.py
 
+import matplotlib
 import pandas as pd
-import matplotlib as plt
+from zipfile import ZipFile
+from matplotlib.figure import Figure
 
 class Model:
     def __init__(self):
@@ -59,6 +61,11 @@ class Model:
         temp = self.fileContent.filter(regex="Fairness$", axis=1)
         averageColumn = temp.mean(axis=1)
         self.fileContent["Average Fairness"] = averageColumn
+
+        #infamy average
+        temp = self.fileContent.filter(regex="Infamy$", axis=1)
+        averageColumn = temp.mean(axis=1)
+        self.fileContent["Average Infamy"] = averageColumn
 
     def addFilter(self, parameter, include=True, value='', num=0, greater=0):
         #gets datatype of column
