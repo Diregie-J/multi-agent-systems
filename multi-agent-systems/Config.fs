@@ -45,3 +45,5 @@ let WorkExemptionThreshold = 0.3
 // Constants for decision making
 let Tau = 10.0
 let Gamma = 5.0
+
+let AgentMaxEnergy = 100.0
