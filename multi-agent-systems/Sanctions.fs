@@ -58,7 +58,7 @@ let allocateFood (targetEnergyList: float list) (agents: Agent list): Agent list
     |> List.map (fun (agent, energy) ->
         if agent.AccessToFood = true
         then 
-            let newGain = agent.Gain + energy
+            let newGain = min (agent.Gain + energy) (AgentMaxEnergy - agent.Energy) // Limit gain to the current energy headroom
             {agent with Energy = agent.Energy + newGain;
                             Gain = newGain}
         else {agent with Gain = 0.0}
