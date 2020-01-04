@@ -37,9 +37,122 @@ class MplWidget(QtWidgets.QWidget):
 
     def my_autopct(self, pct):
         return ('%.1f%%' % pct) if pct > 5 else ''
-
+    
     def defaultTestPlot(self, data, save):
-        self.defaultVotingRulePie(data, False)
+        self.defaultInfamyBoxPlot(data, False)
+
+    def defaultInfamyBoxPlot(self, data, save):
+        self.clear()
+
+        filtered_col = []
+        
+        infamy = data.filter(regex="Infamy$", axis=1)
+        infamy.drop(["Average Infamy"], axis=1)
+        for x in range(len(infamy.T.columns)):
+            col = infamy.T[x]
+            filtered_col.append(col.dropna())
+
+        self.canvas.axes.boxplot(filtered_col, vert=True, patch_artist=True)
+
+        finalDay = data.iloc[-1]["CurrentDay"]
+        ticks = []
+        tickVal = 0
+
+        if finalDay < 20:
+            pass
+
+        elif finalDay < 40:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 2
+            self.canvas.axes.set_xticks(ticks)
+            self.canvas.axes.set_xticklabels(ticks)
+
+        else:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 5
+        
+            while len(ticks) > 20:
+                del ticks[1::2]
+            self.canvas.axes.set_xticks(ticks)
+            self.canvas.axes.set_xticklabels(ticks)
+
+        self.canvas.axes.set_title('Agent Infamy Distribution')
+
+        # adding horizontal grid lines
+        self.canvas.axes.yaxis.grid(True)
+        self.canvas.axes.set_xlabel('Day')
+        self.canvas.axes.set_ylabel('Agent Infamy')
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultISEPlot(self, data, save):
+        self.clear()
+
+        self.canvas.axes.plot(data["CurrentDay"], data["Average Egotism"], color='#66b3ff')
+        self.canvas.axes.plot(data["CurrentDay"], data["Average Idealism"], color='#99ff99')
+        self.canvas.axes.plot(data["CurrentDay"], data["Average Susceptibility"], color='#ff9999')
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.legend()
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultCrimeRatePlot(self, data, save):
+        self.clear()
+
+        crimes = data.filter(regex="LastCrimeDate$", axis=1)
+        agentNum = len(crimes.columns)
+        crimes["Number of Crimes"] = 0
+
+        for i in crimes.columns:
+            crimes["Number of Crimes"] = np.where((data["CurrentDay"] - crimes[i] == 1) & (i != "Number of Crimes") & (crimes[i] != -1), 
+                                                    crimes["Number of Crimes"]+1, crimes["Number of Crimes"])
+
+        dead = data.filter(regex="Alive$", axis=1)
+        crimes["Number Dead"] = dead.isnull().sum(axis=1)
+        crimes["Crime Rate"] = crimes["Number of Crimes"]/(agentNum - crimes["Number Dead"])
+
+        self.canvas.axes.plot(data["CurrentDay"], crimes["Crime Rate"], color='#66b3ff')
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.set_ylabel("Crimes Committed per Person", color='#66b3ff')
+        self.canvas.axes.set_title("Crime Rate per Person")
+
+        deadAxes = self.canvas.axes.twinx()
+        deadAxes.plot(data["CurrentDay"], crimes["Number Dead"], color='#ff9999')
+        deadAxes.set_ylabel("Number of Dead Agents", color='#ff9999')
+        deadAxes.set_ylim(0)
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultCrimeRawPlot(self, data, save):
+        self.clear()
+
+        crimes = data.filter(regex="LastCrimeDate$", axis=1)
+        crimes["Number of Crimes"] = 0
+
+        for i in crimes.columns:
+            crimes["Number of Crimes"] = np.where((data["CurrentDay"] - crimes[i] == 1) & (i != "Number of Crimes") & (crimes[i] != -1), 
+                                                    crimes["Number of Crimes"]+1, crimes["Number of Crimes"])
+
+        self.canvas.axes.plot(data["CurrentDay"], crimes["Number of Crimes"], color='#66b3ff')
+        self.canvas.axes.set_xlabel("Day")
+        self.canvas.axes.set_ylabel("Crimes Committed")
+        self.canvas.axes.set_title("Crimes Committed per Day")
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
 
     def defaultPunishmentRulePie(self, data, save):
         self.clear()
@@ -634,13 +747,38 @@ class MplWidget(QtWidgets.QWidget):
         self.clear()
 
         filtered_col = []
-
+        
         energy = data.filter(regex="Energy$", axis=1)
+        energy.drop(["Average Energy"], axis=1)
         for x in range(len(energy.T.columns)):
             col = energy.T[x]
             filtered_col.append(col.dropna())
 
         self.canvas.axes.boxplot(filtered_col, vert=True, patch_artist=True)
+
+        finalDay = data.iloc[-1]["CurrentDay"]
+        ticks = []
+        tickVal = 0
+
+        if finalDay < 20:
+            pass
+
+        elif finalDay < 40:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 2
+            self.canvas.axes.set_xticks(ticks)
+            self.canvas.axes.set_xticklabels(ticks)
+
+        else:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 5
+        
+            while len(ticks) > 20:
+                del ticks[1::2]
+            self.canvas.axes.set_xticks(ticks)
+            self.canvas.axes.set_xticklabels(ticks)
 
         self.canvas.axes.set_title('Agent Energy Distribution')
 
@@ -699,11 +837,36 @@ class MplWidget(QtWidgets.QWidget):
         filtered_col = []
 
         fairness = data.filter(regex="Fairness$", axis=1)
+        fairness.drop(["Average Fairness"], axis=1)
         for x in range(len(fairness.T.columns)):
             col = fairness.T[x]
             filtered_col.append(col.dropna())
 
         self.canvas.axes.boxplot(filtered_col, vert=True, patch_artist=True)
+
+        finalDay = data.iloc[-1]["CurrentDay"]
+        ticks = []
+        tickVal = 0
+
+        if finalDay < 20:
+            pass
+
+        elif finalDay < 40:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 2
+            self.canvas.axes.set_xticks(ticks)
+            self.canvas.axes.set_xticklabels(ticks)
+
+        else:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 5
+        
+            while len(ticks) > 20:
+                del ticks[1::2]
+            self.canvas.axes.set_xticks(ticks)
+            self.canvas.axes.set_xticklabels(ticks)
 
         self.canvas.axes.set_title('Agent Fairness Distribution')
 
