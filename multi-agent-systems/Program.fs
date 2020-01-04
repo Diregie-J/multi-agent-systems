@@ -13,7 +13,7 @@ open CSVDump
 
 [<EntryPoint>]
 let main argv =
-    // Agent parsing - test with command line args "--number-days -1 --number-profiles 7 --number-agents 24"
+    // Agent parsing - test with command line args "--number-days -1 --number-profiles 7 --number-agents 24 [--number-runs 3]"
     let agents = Parsing.parse argv
 
     let printAgent (agent : Agent) =
@@ -115,12 +115,13 @@ let main argv =
         |> updateNoneAgentStates
 
     let rec loop (currentWorld : WorldState) (agents : Agent list) (writer : StreamWriter) (csvwriter : StreamWriter) : WorldState =
+
         let livingAgents = agents |> List.filter (fun el -> el.Alive = true)
         let deadAgents = agents |> List.filter (fun el -> el.Alive = false)
 
         // Duma session
         let currentWorld = fullDuma livingAgents currentWorld
-        
+
         // Work allocation
         let agentsWithJobs =
             livingAgents
@@ -189,12 +190,11 @@ let main argv =
                                      |> updateRuleOpinion
                                      |> updateRewardsForEveryRuleForAgent currentWorld
         let currentWorld = normaliseTheSocialGood (updateSocialGoodForEveryCurrentRule  opinionChangesAgents currentWorld)
-        
+
         let normalisedAgentArrays = normaliseTheAgentArrays opinionChangesAgents
                                      |> updateAggregationArrayForAgent currentWorld
                                      |> workOpinions currentWorld
                                      |> selfConfidenceUpdate
-            
         // After sanction, agent may die
         let deadAgentsAfterToday = 
             deadAgents @ (normalisedAgentArrays |> List.filter (fun el -> el.Alive = false || el.Energy <= 0.0))
@@ -221,7 +221,8 @@ let main argv =
         if livingAgentsAfterToday.Length = 0 || currentWorld.CurrentDay = maxSimulationTurn then
             csvdump currentWorld (livingAgentsAfterToday @ deadAgentsAfterToday) csvwriter
         else
-            printfn "Living Agents: %A" (printAgent (List.head livingAgentsAfterToday))
+            //printfn "Living Agents: %A" (List.map printAgent livingAgentsAfterToday)
+            //printfn "Dead Agents: %A" (List.map printAgent livingAgentsAfterToday)
             //printfn "Current world status: %A" (printWorld currentWorld)
             printfn "End of DAY: %A" currentWorld.CurrentDay
             writer.WriteLine ()
@@ -231,18 +232,22 @@ let main argv =
                   writer 
                   csvwriter
 
-    let outputTXT = Path.Combine [|".."; ".."; ".."; "output.txt"|]
-    let writer = new StreamWriter(outputTXT)
-    let outputCSV = Path.Combine [|".."; ".."; ".."; "test.csv"|]
-    let csvwriter = new System.IO.StreamWriter(outputCSV)
-    csvwriter.Write(headings)
-    csvwriter.Write(List.fold (fun acc elem -> acc + agentHeadings.Replace("[ID]",string elem.ID)) "" agents)
-    let finalWorld = loop currentWorld agents writer csvwriter
-    printfn "Final world status: %A" (printWorld finalWorld);
-    printfn "Last day %A" finalWorld.CurrentDay
-    writer.Write("Final world: ")
-    writer.WriteLine(finalWorld)
-    writer.Close()
-    csvwriter.Close()
+    let runSimulation (outputTXT : string) (outputCSV :string) =
+        let writer = new StreamWriter(outputTXT)
+        let csvwriter = new System.IO.StreamWriter(outputCSV)
+        csvwriter.Write(headings)
+        csvwriter.Write(List.fold (fun acc elem -> acc + agentHeadings.Replace("[ID]",string elem.ID)) "" agents)
+        let finalWorld = loop currentWorld agents writer csvwriter
+        printfn "Final world status: %A" (printWorld finalWorld);
+        printfn "Last day %A" finalWorld.CurrentDay
+        writer.Write("Final world: ")
+        writer.WriteLine(finalWorld)
+        writer.Close()
+        csvwriter.Close()
+    
+    let outputName = "output"
+    let testName = "test"
+    List.map (fun simNumber -> runSimulation (Path.Combine [|".."; ".."; ".."; "..";  "output"; (outputName + (simNumber |> string) + ".txt")|])
+                                   (Path.Combine [|".."; ".."; ".."; "..";  "csv"; (testName + (simNumber |> string) + ".csv")|])) [0..(numRuns - 1)] |> ignore
 
     0

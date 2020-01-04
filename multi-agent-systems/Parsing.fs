@@ -11,6 +11,7 @@ type CLIArguments =
     | Number_Days of days:int
     | Number_Profiles of profiles:int
     | Number_Agents of agents:int
+    | Number_Runs of runs:int
 with
     interface IArgParserTemplate with
         member s.Usage =
@@ -18,6 +19,7 @@ with
             | Number_Days _ -> "specify the number of days the simulation should run for or -1 if infinitely."
             | Number_Profiles _ -> "specify the number of different profiles for agents."
             | Number_Agents _ -> "specify the number of agents."
+            | Number_Runs _ -> "number of times the simulation should run."
 
 let parseActivity = function
    | "NONE" -> Types.NONE
@@ -49,7 +51,8 @@ let parse (argv : string[]) : Agent list =
     let inputs = parser.ParseCommandLine(inputs = argv, raiseOnUsage = true)
     maxSimulationTurn <- if inputs.Contains Number_Days then inputs.GetResult Number_Days else -1
     numAgents <- if inputs.Contains Number_Agents then inputs.GetResult Number_Agents
-                                                  else failwith "Specify a number of agents!"
+                                                 else failwith "Specify a number of agents!"
+    numRuns <- if inputs.Contains Number_Runs then inputs.GetResult Number_Runs else 1
     match inputs.Contains Number_Profiles with
     | true -> parseAgents (inputs.GetResult Number_Profiles)
     | false -> (failwith "Must specify number of profiles. Please set --number-profiles!")

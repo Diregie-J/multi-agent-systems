@@ -5,6 +5,8 @@
 
 let mutable maxSimulationTurn = -1 // Set in Parsing as a cmd arg; Negative value corresponds to infinity
 let mutable numAgents = 0
+// How many times the simulation should be run
+let mutable numRuns = 1
 let numberOfRules = 5
 
 let costOfHunting = 5.0
@@ -43,3 +45,5 @@ let WorkExemptionThreshold = 0.3
 // Constants for decision making
 let Tau = 10.0
 let Gamma = 5.0
+
+let AgentMaxEnergy = 100.0
