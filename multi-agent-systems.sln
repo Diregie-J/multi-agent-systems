@@ -1,11 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "multi-agent-systems", "multi-agent-systems\multi-agent-systems.fsproj", "{71CC81FA-15FE-4E0F-A27F-F3C9BA8D9E37}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "test", "test\test.fsproj", "{AF7CE173-C685-4B6D-A563-A325E9F1DB22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
