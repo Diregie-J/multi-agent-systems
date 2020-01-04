@@ -1,4 +1,4 @@
-﻿module Program
+module Program
 open Types
 open Decision
 open Sanctions
