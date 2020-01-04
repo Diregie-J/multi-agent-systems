@@ -30,6 +30,7 @@ for i in range(0, numRuns):
 
     plotNames = []
 
+    #energy average
     temp = data.filter(regex="Energy$", axis=1)
     averageColumn = temp.mean(axis=1)
     data["Average Energy"] = averageColumn
@@ -62,7 +63,79 @@ for i in range(0, numRuns):
     outName = os.path.join('..', 'csv', str(i) + '.zip')
     with ZipFile(outName, "w") as zip:
 
+        ######################### crime rate plot #####################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        crimes = data.filter(regex="LastCrimeDate$", axis=1)
+        agentNum = len(crimes.columns)
+        crimes["Number of Crimes"] = 0
+
+        for i in crimes.columns:
+            crimes["Number of Crimes"] = np.where((data["CurrentDay"] - crimes[i] == 1) & (i != "Number of Crimes") & (crimes[i] != -1), 
+                                                    crimes["Number of Crimes"]+1, crimes["Number of Crimes"])
+
+        dead = data.filter(regex="Alive$", axis=1)
+        crimes["Number Dead"] = dead.isnull().sum(axis=1)
+        crimes["Crime Rate"] = crimes["Number of Crimes"]/(agentNum - crimes["Number Dead"])
+
+        axes.plot(data["CurrentDay"], crimes["Crime Rate"], color='#66b3ff')
+        axes.set_xlabel("Day")
+        axes.set_ylabel("Crimes Committed per Person", color='#66b3ff')
+        axes.set_title("Crime Rate per Person")
+
+        deadAxes = axes.twinx()
+        deadAxes.plot(data["CurrentDay"], crimes["Number Dead"], color='#ff9999')
+        deadAxes.set_ylabel("Number of Dead Agents", color='#ff9999')
+        deadAxes.set_ylim(0)
+
+        fig = (plot, "crimeRate.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
+        ######################### crime raw plot ######################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        crimes = data.filter(regex="LastCrimeDate$", axis=1)
+        crimes["Number of Crimes"] = 0
+
+        for i in crimes.columns:
+            crimes["Number of Crimes"] = np.where((data["CurrentDay"] - crimes[i] == 1) & (i != "Number of Crimes") & (crimes[i] != -1), 
+                                                    crimes["Number of Crimes"]+1, crimes["Number of Crimes"])
+
+        axes.plot(data["CurrentDay"], crimes["Number of Crimes"], color='#66b3ff')
+        axes.set_xlabel("Day")
+        axes.set_title("Crimes Committed per Day")
+
+        fig = (plot, "crimeRaw.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
+        ######################### ISE plot ############################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        axes.plot(data["CurrentDay"], data["Average Egotism"], color='#66b3ff')
+        axes.plot(data["CurrentDay"], data["Average Idealism"], color='#99ff99')
+        axes.plot(data["CurrentDay"], data["Average Susceptibility"], color='#ff9999')
+        axes.set_xlabel("Day")
+        axes.legend()
+
+        fig = (plot, "ISE.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
         ######################### dead agent/energy plot ####################################
+
+        plot.clear()
+        axes = plt.subplot(111)
 
         energy = data.filter(regex="Energy$", axis=1)
         energy.apply(lambda x: axes.scatter(x.index+1, x, c='g', marker="x"))
@@ -101,11 +174,36 @@ for i in range(0, numRuns):
         filtered_col = []
 
         energy = data.filter(regex="Energy$", axis=1)
+        energy.drop(["Average Energy"], axis=1)
         for x in range(len(energy.T.columns)):
             col = energy.T[x]
             filtered_col.append(col.dropna())
 
         axes.boxplot(filtered_col, vert=True, patch_artist=True)
+
+        finalDay = data.iloc[-1]["CurrentDay"]
+        ticks = []
+        tickVal = 0
+
+        if finalDay < 20:
+            pass
+
+        elif finalDay < 40:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 2
+            axes.set_xticks(ticks)
+            axes.set_xticklabels(ticks)
+
+        else:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 5
+        
+            while len(ticks) > 20:
+                del ticks[1::2]
+            axes.set_xticks(ticks)
+            axes.set_xticklabels(ticks)
 
         axes.set_title('Agent Energy Distribution')
 
@@ -176,11 +274,36 @@ for i in range(0, numRuns):
         filtered_col = []
 
         fairness = data.filter(regex="Fairness$", axis=1)
+        fairness.drop(["Average Fairness"], axis=1)
         for x in range(len(fairness.T.columns)):
             col = fairness.T[x]
             filtered_col.append(col.dropna())
 
         axes.boxplot(filtered_col, vert=True, patch_artist=True)
+
+        finalDay = data.iloc[-1]["CurrentDay"]
+        ticks = []
+        tickVal = 0
+
+        if finalDay < 20:
+            pass
+
+        elif finalDay < 40:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 2
+            axes.set_xticks(ticks)
+            axes.set_xticklabels(ticks)
+
+        else:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 5
+        
+            while len(ticks) > 20:
+                del ticks[1::2]
+            axes.set_xticks(ticks)
+            axes.set_xticklabels(ticks)
 
         axes.set_title('Agent Fairness Distribution')
 
@@ -206,6 +329,58 @@ for i in range(0, numRuns):
         axes.set_title("Average Agent Infamy")
 
         fig = (plot, "infamy.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
+        ####################### infamy box plot ###############################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        filtered_col = []
+
+        infamy = data.filter(regex="Infamy$", axis=1)
+        infamy.drop(["Average Infamy"], axis=1)
+        for x in range(len(infamy.T.columns)):
+            col = infamy.T[x]
+            filtered_col.append(col.dropna())
+
+        axes.boxplot(filtered_col, vert=True, patch_artist=True)
+
+        finalDay = data.iloc[-1]["CurrentDay"]
+        ticks = []
+        tickVal = 0
+
+        if finalDay < 20:
+            pass
+
+        elif finalDay < 40:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 2
+            axes.set_xticks(ticks)
+            axes.set_xticklabels(ticks)
+
+        else:
+            while tickVal < finalDay:
+                ticks.append(tickVal)
+                tickVal += 5
+        
+            while len(ticks) > 20:
+                del ticks[1::2]
+            axes.set_xticks(ticks)
+            axes.set_xticklabels(ticks)
+
+        axes.set_title('Agent Infamy Distribution')
+
+        # adding horizontal grid lines
+        axes.yaxis.grid(True)
+        axes.set_xlabel('Day')
+        axes.set_ylabel('Agent Infamy')
+        axes.set_ylim(0)
+
+        fig = (plot, "boxPlotInfamy.png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])

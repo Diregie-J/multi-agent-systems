@@ -42,6 +42,11 @@ let main argv =
             CurrentVotingRule = Borda;
             CurrentWorkRule = Everyone;
             CurrentMaxPunishment = Exile;
+            ShelterTime = ruleTime;
+            VoteTime = ruleTime;
+            FoodTime = ruleTime;
+            WorkTime = ruleTime;
+            PunishmentTime = ruleTime;
             CurrentSanctionStepSize = 0.1;
             CurrentDay = 0;
             CurrentChair = None;
@@ -207,6 +212,9 @@ let main argv =
 
         let currentWorld = updateEndOfDayState agents currentWorld
 
+        printf "times: %A, %A, %A, %A, %A" currentWorld.FoodTime currentWorld.WorkTime currentWorld.PunishmentTime currentWorld.VoteTime currentWorld.ShelterTime
+        printf "rules: %A, %A, %A, %A, %A" currentWorld.CurrentFoodRule currentWorld.CurrentWorkRule currentWorld.CurrentMaxPunishment currentWorld.CurrentVotingRule currentWorld.CurrentShelterRule
+        
         writer.Write ("Living Agents in day ")
         writer.Write (currentWorld.CurrentDay)
         List.map (fun agent -> writer.Write (printAgent agent)) livingAgentsAfterToday |> ignore
@@ -249,7 +257,7 @@ let main argv =
     
     let outputName = "output"
     let testName = "test"
-    List.map (fun simNumber -> runSimulation (Path.Combine [|".."; ".."; ".."; "..";  "output"; (outputName + (simNumber |> string) + ".txt")|])
-                                   (Path.Combine [|".."; ".."; ".."; "..";  "csv"; (testName + (simNumber |> string) + ".csv")|])) [0..(numRuns - 1)] |> ignore
+    //List.map (fun simNumber -> runSimulation (Path.Combine [|".."; ".."; ".."; "..";  "output"; (outputName + (simNumber |> string) + ".txt")|])
+    //                               (Path.Combine [|".."; ".."; ".."; "..";  "csv"; (testName + (simNumber |> string) + ".csv")|])) [0..(numRuns - 1)] |> ignore
 
     0
