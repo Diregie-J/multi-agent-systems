@@ -10,9 +10,11 @@ open Opinion
 open System.IO
 open Agent
 open CSVDump
+open System.Threading
 
 [<EntryPoint>]
 let main argv =
+    Thread.CurrentThread.CurrentCulture <- System.Globalization.CultureInfo.InvariantCulture;
     // Agent parsing - test with command line args "--number-days -1 --number-profiles 7 --number-agents 24 [--number-runs 3]"
     let agents = Parsing.parse argv
 
