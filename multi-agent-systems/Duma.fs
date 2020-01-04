@@ -220,17 +220,37 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
         match newRule with
         | Some(x) -> x
         | None -> oldRule
+    let shelterRule = 
+        if world.ShelterTime = 0
+        then (applyOptionRule newShelterRule world.CurrentShelterRule), ruleTime
+        else world.CurrentShelterRule, world.ShelterTime - 1
+    let foodRule = 
+        if world.FoodTime = 0
+        then (applyOptionRule newFoodRule world.CurrentFoodRule), ruleTime
+        else world.CurrentFoodRule, world.FoodTime - 1
+    let workRule =
+        if world.WorkTime = 0
+        then (applyOptionRule newWorkRule world.CurrentWorkRule), ruleTime
+        else world.CurrentWorkRule, world.WorkTime - 1
+    let voteRule = 
+        if world.VoteTime = 0
+        then (applyOptionRule newVotingSystem world.CurrentVotingRule), ruleTime
+        else world.CurrentVotingRule, world.VoteTime - 1
     // Get all new stuff except max sanctions
     let newWorld = {
         world with
-            CurrentShelterRule = applyOptionRule newShelterRule world.CurrentShelterRule;
-            CurrentWorkRule = applyOptionRule newWorkRule world.CurrentWorkRule;
-            CurrentFoodRule = applyOptionRule newFoodRule world.CurrentFoodRule;
-            CurrentVotingRule = applyOptionRule newVotingSystem world.CurrentVotingRule;
+            CurrentShelterRule = shelterRule |> fst;
+            CurrentWorkRule = workRule |> fst;
+            CurrentFoodRule = foodRule |> fst;
+            CurrentVotingRule = voteRule |> fst;
+            ShelterTime = shelterRule |> snd;
+            WorkTime = workRule |> snd;
+            FoodTime = foodRule |> snd;
+            VoteTime = voteRule |> snd;
         }
     // Punishment can be either incr or decr or changing max punishment
     match newSanction with
-    | x when x = Some(Increment) ->
+    | x when x = Some(Increment) && world.PunishmentTime = 0 ->
         {newWorld with
             CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize * 1.1;
             AllRules = setAllRules world;
@@ -238,8 +258,9 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
                                  (applyOptionRule newFoodRule world.CurrentFoodRule)
                                  (applyOptionRule newWorkRule world.CurrentWorkRule)
                                  (applyOptionRule newVotingSystem world.CurrentVotingRule) world.CurrentMaxPunishment;
+            PunishmentTime = ruleTime;
         }
-    | x when x = Some(Decrement) ->
+    | x when x = Some(Decrement) && world.PunishmentTime = 0  ->
         {newWorld with
             CurrentSanctionStepSize = newWorld.CurrentSanctionStepSize * 0.9;
             AllRules = setAllRules world;
@@ -247,8 +268,9 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
                                  (applyOptionRule newFoodRule world.CurrentFoodRule)
                                  (applyOptionRule newWorkRule world.CurrentWorkRule)
                                  (applyOptionRule newVotingSystem world.CurrentVotingRule) world.CurrentMaxPunishment;
+            PunishmentTime = ruleTime
         }
-    | _ -> // If not Some(increment) or Some(decrement) then must be a max sanction update or None
+    | _ when world.PunishmentTime = 0 -> // If not Some(increment) or Some(decrement) then must be a max sanction update or None
         {newWorld with
             CurrentMaxPunishment = applyOptionRule newSanction world.CurrentMaxPunishment;
             AllRules = setAllRules world;
@@ -257,6 +279,11 @@ let implementNewRules (world : WorldState) (rulesToImplement : ShelterRule optio
                                  (applyOptionRule newWorkRule world.CurrentWorkRule)
                                  (applyOptionRule newVotingSystem world.CurrentVotingRule)    
                                  (applyOptionRule newSanction world.CurrentMaxPunishment);
+            PunishmentTime = ruleTime
+        }
+    | _ -> 
+        {newWorld with
+            PunishmentTime = newWorld.PunishmentTime - 1
         }
 
 

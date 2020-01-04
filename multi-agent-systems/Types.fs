@@ -118,6 +118,11 @@ type WorldState =
         CurrentFoodRule : FoodRule;
         CurrentWorkRule : WorkAllocation;
         CurrentMaxPunishment : Punishment;
+        ShelterTime : int;
+        VoteTime : int;
+        FoodTime : int;
+        WorkTime : int;
+        PunishmentTime : int;
         CurrentSanctionStepSize : float;
         CurrentDay : int;
         NumHare : int;

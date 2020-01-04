@@ -37,6 +37,9 @@ let nominationThreshold = 0.5
 // For Sanctions
 let InfamyStep = 0.1
 
+// Time between rule changes
+let ruleTime = 6
+
 // MinimumFoodForOligarchy as a fraction of F/N (maximum assignable value equivalent to communism) 
 let MinimumFoodForOligarchy = 1.0
 let CrimeDiscoveryRate = 0.5
