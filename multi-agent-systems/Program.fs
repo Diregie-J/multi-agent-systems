@@ -257,7 +257,7 @@ let main argv =
     
     let outputName = "output"
     let testName = "test"
-    //List.map (fun simNumber -> runSimulation (Path.Combine [|".."; ".."; ".."; "..";  "output"; (outputName + (simNumber |> string) + ".txt")|])
-    //                               (Path.Combine [|".."; ".."; ".."; "..";  "csv"; (testName + (simNumber |> string) + ".csv")|])) [0..(numRuns - 1)] |> ignore
+    List.map (fun simNumber -> runSimulation (Path.Combine [|".."; ".."; ".."; "..";  "output"; (outputName + (simNumber |> string) + ".txt")|])
+                                   (Path.Combine [|".."; ".."; ".."; "..";  "csv"; (testName + (simNumber |> string) + ".csv")|])) [0..(numRuns - 1)] |> ignore
 
     0
