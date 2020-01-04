@@ -7,19 +7,19 @@ let mutable maxSimulationTurn = -1 // Set in Parsing as a cmd arg; Negative valu
 let mutable numAgents = 0
 let numberOfRules = 5
 
-let costOfHunting = 30.0
+let costOfHunting = 5.0
 
 let staggiEnergyValue = 200.0
 let staggiProbability = 0.1 // likelihood is 1 in 10 intervals
-let staggiMeanRegenRate = 0.1
+let staggiMeanRegenRate = 0.6
 let staggiMinIndividual = costOfHunting * 0.4
 let staggiMinCollective = costOfHunting * 2.0
 let rabbosEnergyValue = 50.0
 let rabbosProbability = 0.3 // likelihood is 3 in 10 intervals
 let rabbosMinRequirement = costOfHunting * 0.4
-let rabbosMeanRegenRate = 0.1
+let rabbosMeanRegenRate = 0.6
 
-let eb = 10.0 // energy cost per worker to build
+let eb = 5.0 // energy cost per worker to build
 let em = 2.5 // energy cost per worker to maintain
 let rg = 0.05 // shelter quality decay rate
 let es = 35.0 // energy cost per worker to build one shelter

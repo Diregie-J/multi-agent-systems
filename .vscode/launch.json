@@ -1,0 +1,20 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/multi-agent-systems/bin/Debug/netcoreapp3.0/multi-agent-systems",
+            "args":  "--number-days -1 --number-profiles 7 --number-agents 24",
+            "cwd": "${workspaceFolder}/multi-agent-systems/bin/Debug/netcoreapp3.0/",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        }
+
+    ]
+}
