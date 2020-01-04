@@ -35,47 +35,239 @@ class MplWidget(QtWidgets.QWidget):
         # do stuff to fig or axes to plot things
         self.canvas.draw()
 
+    def my_autopct(self, pct):
+        return ('%.1f%%' % pct) if pct > 5 else ''
+
     def defaultTestPlot(self, data, save):
-        self.defaultShelterRulePie(data, False)
+        self.defaultVotingRulePie(data, False)
+
+    def defaultPunishmentRulePie(self, data, save):
+        self.clear()
+
+        labels = ['Exile', 'No Food and Shelter', 'Increment', 'Decrement']
+        colors = ['#ff9999','#66b3ff','#99ff99', '#ffcc99']
+        explode = [0.05,0.05,0.05,0.05]
+        sizes = []
+        occurences = data["CurrentMaxPunishment"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Exile"])
+        except:
+            labels.remove('Exile')
+            colors.remove('#ff9999')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["No Food and Shelter"])
+        except:
+            labels.remove('No Food and Shelter')
+            colors.remove('#66b3ff')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Increment"])
+        except:
+            labels.remove("Increment")
+            colors.remove('#99ff99')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Decrement"])
+        except:
+            labels.remove("Decrement")
+            colors.remove('#ffcc99')
+            explode.pop()
+        
+        self.canvas.axes.pie(sizes, colors = colors, labels=labels, autopct=self.my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        self.canvas.axes.add_patch(centre_circle)
+        self.canvas.axes.axis('equal')
+        self.canvas.axes.set_title('Maximum Punishment Proportions')
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultWorkRulePie(self, data, save):
+        self.clear()
+
+        labels = ['Everyone', 'Strongest', 'By Choice']
+        colors = ['#ff9999','#66b3ff','#99ff99']
+        explode = [0.05,0.05,0.05]
+        sizes = []
+        occurences = data["CurrentWorkRule"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Everyone"])
+        except:
+            labels.remove('Everyone')
+            colors.remove('#ff9999')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Strongest"])
+        except:
+            labels.remove('Strongest')
+            colors.remove('#66b3ff')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["By Choice"])
+        except:
+            labels.remove("By Choice")
+            colors.remove('#99ff99')
+            explode.pop()
+        
+        self.canvas.axes.pie(sizes, colors = colors, labels=labels, autopct=self.my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        self.canvas.axes.add_patch(centre_circle)
+        self.canvas.axes.axis('equal')
+        self.canvas.axes.set_title('Work Rule Proportions')
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultVotingRulePie(self, data, save):
+        self.clear()
+
+        labels = ['Plurality', 'Borda', 'Approval', 'Instant Runoff']
+        colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+        explode = [0.05,0.05,0.05,0.05]
+        sizes = []
+        occurences = data["CurrentVotingRule"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Plurality"])
+        except:
+            labels.remove('Plurality')
+            colors.remove('#ff9999')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Borda"])
+        except:
+            labels.remove('Borda')
+            colors.remove('#66b3ff')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Approval"])
+        except:
+            labels.remove("Approval")
+            colors.remove('#99ff99')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Instant Runoff"])
+        except:
+            labels.remove('Instant Runoff')
+            colors.remove('#ffcc99')
+            explode.pop()
+        
+        self.canvas.axes.pie(sizes, colors = colors, labels=labels, autopct=self.my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        self.canvas.axes.add_patch(centre_circle)
+        self.canvas.axes.axis('equal')
+        self.canvas.axes.set_title('Voting Rule Proportions')
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+    def defaultFoodRulePie(self, data, save):
+        self.clear()
+
+        labels = ['Communism', 'Oligarchy', 'Meritocracy', 'Socialism']
+        colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+        explode = [0.05,0.05,0.05,0.05]
+        sizes = []
+        occurences = data["CurrentFoodRule"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Communism"])
+        except:
+            labels.remove('Communism')
+            colors.remove('#ff9999')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Oligarchy"])
+        except:
+            labels.remove('Oligarchy')
+            colors.remove('#66b3ff')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Meritocracy"])
+        except:
+            labels.remove("Meritocracy")
+            colors.remove('#99ff99')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Socialism"])
+        except:
+            labels.remove('Socialism')
+            colors.remove('#ffcc99')
+            explode.pop()
+        
+        self.canvas.axes.pie(sizes, colors = colors, labels=labels, autopct=self.my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        self.canvas.axes.add_patch(centre_circle)
+        self.canvas.axes.axis('equal')
+        self.canvas.axes.set_title('Food Rule Proportions')
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
 
     def defaultShelterRulePie(self, data, save):
         self.clear()
 
         labels = ['Random', 'Oligarchy', 'Meritocracy', 'Socialism']
         colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
-        explode = (0.05,0.05,0.05,0.05)
+        explode = [0.05,0.05,0.05,0.05]
         sizes = []
         occurences = data["CurrentShelterRule"].value_counts()
 
         try:
             sizes.append(occurences.loc["Random"])
         except:
-            temp = 0
-        sizes.append(temp)
+            labels.remove('Random')
+            colors.remove('#ff9999')
+            explode.pop()
 
         try:
-            temp = occurences.loc["Oligarchy"]
+            sizes.append(occurences.loc["Oligarchy"])
         except:
-            temp = 0
-        sizes.append(temp)
+            labels.remove('Oligarchy')
+            colors.remove('#66b3ff')
+            explode.pop()
 
         try:
-            temp = occurences.loc["Meritocracy"]
+            sizes.append(occurences.loc["Meritocracy"])
         except:
-            temp = 0
-        sizes.append(temp)
+            labels.remove("Meritocracy")
+            colors.remove('#99ff99')
+            explode.pop()
 
         try:
-            temp = occurences.loc["Socialism"]
+            sizes.append(occurences.loc["Socialism"])
         except:
-            temp = 0
-        sizes.append(temp)
+            labels.remove('Socialism')
+            colors.remove('#ffcc99')
+            explode.pop()
         
-        self.canvas.axes.pie(sizes, colors = colors, labels=labels, autopct='%1.1f%%', startangle=90, pctdistance=0.85, explode = explode)
+        self.canvas.axes.pie(sizes, colors = colors, labels=labels, autopct=self.my_autopct, startangle=90, pctdistance=0.85, explode = explode)
         centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
         self.canvas.axes.add_patch(centre_circle)
-        self.canvas.axes.axis('equal')  
-        self.canvas.fig.tight_layout()
+        self.canvas.axes.axis('equal')
+        self.canvas.axes.set_title('Shelter Rule Proportions')  
 
         if save:
             return self.canvas.fig
@@ -150,6 +342,15 @@ class MplWidget(QtWidgets.QWidget):
                 watch = x
             count += 1
         
+        watch = data.iloc[-1]["CurrentWorkRule"]
+        if watch == "Everyone":
+            everyone.append((start, count))
+        elif watch == "Strongest":
+            strongest.append((start, count))
+        else:
+            byChoice.append((start, count))
+
+
         self.canvas.axes.broken_barh(strongest, (13,5), facecolors='#66b3ff')
         self.canvas.axes.broken_barh(byChoice, (23,5), facecolors='#99ff99')
         self.canvas.axes.broken_barh(everyone, (33,5), facecolors='#ff9999')
@@ -193,6 +394,17 @@ class MplWidget(QtWidgets.QWidget):
                 watch = x
             count += 1
         
+        watch = data.iloc[-1]["CurrentMaxPunishment"]
+        if watch == "Exile":
+            exile.append((start, count))
+        elif watch == "Increment":
+            increment.append((start, count))
+        elif watch == "Decrement":
+            decrement.append((start, count))
+        else:
+            noFoodAndShelter.append((start, count))
+
+
         self.canvas.axes.broken_barh(noFoodAndShelter, (13,5), facecolors='#66b3ff')
         self.canvas.axes.broken_barh(increment, (23,5), facecolors='#99ff99')
         self.canvas.axes.broken_barh(decrement, (33,5), facecolors='#ffcc99')
@@ -290,6 +502,16 @@ class MplWidget(QtWidgets.QWidget):
                 count = 0
                 watch = x
             count += 1
+
+        watch = data.iloc[-1]["CurrentFoodRule"]
+        if watch == "Communism":
+            communism.append((start, count))
+        elif watch == "Socialism":
+            socialism.append((start, count))
+        elif watch == "Oligarchy":
+            meritocracy.append((start, count))
+        else:
+            oligarchy.append((start, count))
         
         self.canvas.axes.broken_barh(socialism, (13,5), facecolors='#66b3ff')
         self.canvas.axes.broken_barh(meritocracy, (23,5), facecolors='#99ff99')
@@ -335,6 +557,16 @@ class MplWidget(QtWidgets.QWidget):
                 watch = x
             count += 1
         
+        watch = data.iloc[-1]["CurrentShelterRule"]
+        if watch == "Random":
+            random.append((start, count))
+        elif watch == "Socialism":
+            socialism.append((start, count))
+        elif watch == "Oligarchy":
+            meritocracy.append((start, count))
+        else:
+            oligarchy.append((start, count))
+
         self.canvas.axes.broken_barh(socialism, (13,5), facecolors='#66b3ff')
         self.canvas.axes.broken_barh(meritocracy, (23,5), facecolors='#99ff99')
         self.canvas.axes.broken_barh(oligarchy, (33,5), facecolors='#ffcc99')

@@ -18,6 +18,9 @@ args = parser.parse_args()
 
 numRuns = int(args.numRuns)
 
+def my_autopct(pct):
+    return ('%.1f%%' % pct) if pct > 5 else ''
+
 for i in range(0, numRuns):
     inputPath = os.path.join('..', 'csv', 'test' + str(i) + '.csv')
     data = pd.read_csv(inputPath)
@@ -246,10 +249,10 @@ for i in range(0, numRuns):
         else:
             oligarchy.append((start, count))
 
-        axes.broken_barh(socialism, (13,5), facecolors='tab:blue')
-        axes.broken_barh(meritocracy, (23,5), facecolors='tab:green')
-        axes.broken_barh(oligarchy, (33,5), facecolors='tab:orange')
-        axes.broken_barh(random, (43,5), facecolors='tab:red')
+        axes.broken_barh(socialism, (13,5), facecolors='#66b3ff')
+        axes.broken_barh(meritocracy, (23,5), facecolors='#99ff99')
+        axes.broken_barh(oligarchy, (33,5), facecolors='#ffcc99')
+        axes.broken_barh(random, (43,5), facecolors='#ff9999')
         axes.set_xlabel("Day")
         axes.set_ylabel("Shelter Rule")
         axes.set_title("Shelter Rule During Simulation")
@@ -264,6 +267,54 @@ for i in range(0, numRuns):
         plotNames.append(fig[1])
 
         ################### Shelter rule pie #############################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        labels = ['Random', 'Oligarchy', 'Meritocracy', 'Socialism']
+        colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+        explode = [0.05,0.05,0.05,0.05]
+        sizes = []
+        occurences = data["CurrentShelterRule"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Random"])
+        except:
+            labels.remove('Random')
+            colors.remove('#ff9999')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Oligarchy"])
+        except:
+            labels.remove('Oligarchy')
+            colors.remove('#66b3ff')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Meritocracy"])
+        except:
+            labels.remove("Meritocracy")
+            colors.remove('#99ff99')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Socialism"])
+        except:
+            labels.remove('Socialism')
+            colors.remove('#ffcc99')
+            explode.pop()
+        
+        axes.pie(sizes, colors = colors, labels=labels, autopct=my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        axes.add_patch(centre_circle)
+        axes.axis('equal')
+        axes.set_title('Shelter Rule Proportions')
+
+        fig = (plot, "shelterRulePie.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
 
         ################### Food rule plot ###############################
 
@@ -304,10 +355,10 @@ for i in range(0, numRuns):
         else:
             oligarchy.append((start, count))
 
-        axes.broken_barh(socialism, (13,5), facecolors='tab:blue')
-        axes.broken_barh(meritocracy, (23,5), facecolors='tab:green')
-        axes.broken_barh(oligarchy, (33,5), facecolors='tab:orange')
-        axes.broken_barh(communism, (43,5), facecolors='tab:red')
+        axes.broken_barh(socialism, (13,5), facecolors='#66b3ff')
+        axes.broken_barh(meritocracy, (23,5), facecolors='#99ff99')
+        axes.broken_barh(oligarchy, (33,5), facecolors='#ffcc99')
+        axes.broken_barh(communism, (43,5), facecolors='#ff9999')
         axes.set_xlabel("Day")
         axes.set_ylabel("Food Rule")
         axes.set_title("Food Rule During Simulation")
@@ -322,6 +373,54 @@ for i in range(0, numRuns):
         plotNames.append(fig[1])
 
         ######################### food rule pie ##################################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        labels = ['Communism', 'Oligarchy', 'Meritocracy', 'Socialism']
+        colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+        explode = [0.05,0.05,0.05,0.05]
+        sizes = []
+        occurences = data["CurrentFoodRule"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Communism"])
+        except:
+            labels.remove('Communism')
+            colors.remove('#ff9999')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Oligarchy"])
+        except:
+            labels.remove('Oligarchy')
+            colors.remove('#66b3ff')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Meritocracy"])
+        except:
+            labels.remove("Meritocracy")
+            colors.remove('#99ff99')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Socialism"])
+        except:
+            labels.remove('Socialism')
+            colors.remove('#ffcc99')
+            explode.pop()
+        
+        axes.pie(sizes, colors = colors, labels=labels, autopct=my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        axes.add_patch(centre_circle)
+        axes.axis('equal')
+        axes.set_title('Food Rule Proportions')
+
+        fig = (plot, "foodRulePie.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
 
         ######################### work rule plot #################################
 
@@ -357,9 +456,9 @@ for i in range(0, numRuns):
         else:
             byChoice.append((start, count))
 
-        axes.broken_barh(strongest, (13,5), facecolors='tab:blue')
-        axes.broken_barh(byChoice, (23,5), facecolors='tab:green')
-        axes.broken_barh(everyone, (33,5), facecolors='tab:red')
+        axes.broken_barh(strongest, (13,5), facecolors='#66b3ff')
+        axes.broken_barh(byChoice, (23,5), facecolors='#99ff99')
+        axes.broken_barh(everyone, (33,5), facecolors='#ff9999')
         axes.set_xlabel("Day")
         axes.set_ylabel("Work Rule")
         axes.set_title("Work Rule During Simulation")
@@ -374,6 +473,47 @@ for i in range(0, numRuns):
         plotNames.append(fig[1])
 
         ############################## work rule pie #############################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        labels = ['Everyone', 'Strongest', 'By Choice']
+        colors = ['#ff9999','#66b3ff','#99ff99']
+        explode = [0.05,0.05,0.05]
+        sizes = []
+        occurences = data["CurrentWorkRule"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Everyone"])
+        except:
+            labels.remove('Everyone')
+            colors.remove('#ff9999')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Strongest"])
+        except:
+            labels.remove('Strongest')
+            colors.remove('#66b3ff')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["By Choice"])
+        except:
+            labels.remove("By Choice")
+            colors.remove('#99ff99')
+            explode.pop()
+        
+        axes.pie(sizes, colors = colors, labels=labels, autopct=my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        axes.add_patch(centre_circle)
+        axes.axis('equal')
+        axes.set_title('Work Rule Proportions')
+
+        fig = (plot, "workRulePie.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
 
         ######################### voting rule plot ###############################
 
@@ -414,10 +554,10 @@ for i in range(0, numRuns):
         else:
             instantRunoff.append((start, count))
         
-        axes.broken_barh(borda, (13,5), facecolors='tab:blue')
-        axes.broken_barh(approval, (23,5), facecolors='tab:green')
-        axes.broken_barh(instantRunoff, (33,5), facecolors='tab:orange')
-        axes.broken_barh(plurality, (43,5), facecolors='tab:red')
+        axes.broken_barh(borda, (13,5), facecolors='#66b3ff')
+        axes.broken_barh(approval, (23,5), facecolors='#99ff99')
+        axes.broken_barh(instantRunoff, (33,5), facecolors='#ffcc99')
+        axes.broken_barh(plurality, (43,5), facecolors='#ff9999')
         axes.set_xlabel("Day")
         axes.set_ylabel("Voting Rule")
         axes.set_title("Voting Rule During Simulation")
@@ -432,6 +572,54 @@ for i in range(0, numRuns):
         plotNames.append(fig[1])
 
         ########################### voting rule pie ###############################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        labels = ['Plurality', 'Borda', 'Approval', 'Instant Runoff']
+        colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+        explode = [0.05,0.05,0.05,0.05]
+        sizes = []
+        occurences = data["CurrentVotingRule"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Plurality"])
+        except:
+            labels.remove('Plurality')
+            colors.remove('#ff9999')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Borda"])
+        except:
+            labels.remove('Borda')
+            colors.remove('#66b3ff')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Approval"])
+        except:
+            labels.remove("Approval")
+            colors.remove('#99ff99')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Instant Runoff"])
+        except:
+            labels.remove('Instant Runoff')
+            colors.remove('#ffcc99')
+            explode.pop()
+        
+        axes.pie(sizes, colors = colors, labels=labels, autopct=my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        axes.add_patch(centre_circle)
+        axes.axis('equal')
+        axes.set_title('Voting Rule Proportions')
+
+        fig = (plot, "votingRulePie.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
 
         ##################### punishment rule plot ################################
 
@@ -472,10 +660,10 @@ for i in range(0, numRuns):
         else:
             noFoodAndShelter.append((start, count))
         
-        axes.broken_barh(noFoodAndShelter, (13,5), facecolors='tab:blue')
-        axes.broken_barh(increment, (23,5), facecolors='tab:green')
-        axes.broken_barh(decrement, (33,5), facecolors='tab:orange')
-        axes.broken_barh(exile, (43,5), facecolors='tab:red')
+        axes.broken_barh(noFoodAndShelter, (13,5), facecolors='#66b3ff')
+        axes.broken_barh(increment, (23,5), facecolors='#99ff99')
+        axes.broken_barh(decrement, (33,5), facecolors='#ffcc99')
+        axes.broken_barh(exile, (43,5), facecolors='#ff9999')
         axes.set_xlabel("Day")
         axes.set_ylabel("Maximum Punishment")
         axes.set_title("Maximum Punishment During Simulation")
@@ -485,6 +673,56 @@ for i in range(0, numRuns):
         plt.tight_layout()
 
         fig = (plot, "punishmentRule.png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
+
+        ############################# punishment rule pie ##########################
+
+        plot.clear()
+        axes = plt.subplot(111)
+
+        labels = ['Exile', 'No Food and Shelter', 'Increment', 'Decrement']
+        colors = ['#ff9999','#66b3ff','#99ff99', '#ffcc99']
+        explode = [0.05,0.05,0.05,0.05]
+        sizes = []
+        occurences = data["CurrentMaxPunishment"].value_counts()
+
+        try:
+            sizes.append(occurences.loc["Exile"])
+        except:
+            labels.remove('Exile')
+            colors.remove('#ff9999')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["No Food and Shelter"])
+        except:
+            labels.remove('No Food and Shelter')
+            colors.remove('#66b3ff')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Increment"])
+        except:
+            labels.remove("Increment")
+            colors.remove('#99ff99')
+            explode.pop()
+
+        try:
+            sizes.append(occurences.loc["Decrement"])
+        except:
+            labels.remove("Decrement")
+            colors.remove('#ffcc99')
+            explode.pop()
+        
+        axes.pie(sizes, colors = colors, labels=labels, autopct=my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        axes.add_patch(centre_circle)
+        axes.axis('equal')
+        axes.set_title('Maximum Punishment Proportions')
+
+        fig = (plot, "punishmentRulePie.png")
         fig[0].savefig(fig[1])
         zip.write(fig[1])
         plotNames.append(fig[1])
@@ -521,9 +759,9 @@ for i in range(0, numRuns):
                 temp = 0
             building.append(temp)
 
-        noneBar = axes.bar(data["CurrentDay"], none, 0.85, color="tab:red")
-        huntingBar = axes.bar(data["CurrentDay"], hunting, 0.85, bottom=none, color="tab:green")
-        buildingBar = axes.bar(data["CurrentDay"], building, 0.85, bottom=np.array(none)+np.array(hunting), color="tab:blue")
+        noneBar = axes.bar(data["CurrentDay"], none, 0.85, color="#ff9999")
+        huntingBar = axes.bar(data["CurrentDay"], hunting, 0.85, bottom=none, color="#99ff99")
+        buildingBar = axes.bar(data["CurrentDay"], building, 0.85, bottom=np.array(none)+np.array(hunting), color="#66b3ff")
         axes.set_ylabel("Number of Agents")
         axes.set_xlabel("Day")
         axes.set_title("Agent Activity Breakdown per Day")
