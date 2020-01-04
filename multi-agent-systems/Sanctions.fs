@@ -100,14 +100,16 @@ let sanction (world: WorldState) (agents: Agent list) : Agent list =
 
 
 // Detect crime actions based on probability of discovery
-let detectCrime (world: WorldState) (expectedEnergyGain: float list) (expectedWorkType: Activity list) (agents: Agent list) : Agent list =
+let detectCrime (world: WorldState) (expectedEnergyGain: float list) (expectedWorkType: Activity list) (agents: Agent list) : Agent list * WorldState =
    
+    let mutable numCrimes = world.NumberOfCrimes
     let rand = new System.Random()
     let checkFoodAllocation (agents: Agent list) = 
         List.zip agents expectedEnergyGain
         |> List.map (fun (agent, gain) ->
             if agent.Gain > gain && rand.NextDouble() < CrimeDiscoveryRate 
-                then {agent with Infamy = min 1.0 agent.Infamy + InfamyStep; LastCrimeDate = world.CurrentDay}
+                then numCrimes <- numCrimes + 1
+                     {agent with Infamy = min 1.0 agent.Infamy + InfamyStep; LastCrimeDate = world.CurrentDay}
             else agent
         )
 
@@ -115,11 +117,10 @@ let detectCrime (world: WorldState) (expectedEnergyGain: float list) (expectedWo
         List.zip agents expectedWorkType
         |> List.map (fun (agent, job) ->
             if fst agent.TodaysActivity = NONE && job <> NONE && rand.NextDouble() < CrimeDiscoveryRate 
-                then {agent with Infamy = min 1.0 agent.Infamy + InfamyStep; LastCrimeDate = world.CurrentDay}
+                then numCrimes <- numCrimes + 1
+                     {agent with Infamy = min 1.0 agent.Infamy + InfamyStep; LastCrimeDate = world.CurrentDay}
             else agent
         )
 
-    agents
-    |> checkFoodAllocation
-    |> checkTaskExecution
+    (agents |> checkFoodAllocation |> checkTaskExecution, {world with NumberOfCrimes = numCrimes})
 

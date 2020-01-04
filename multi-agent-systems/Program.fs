@@ -31,7 +31,7 @@ let main argv =
     let printWorld (world : WorldState) =
         (("Buildings: ", world.Buildings), ("Time to new chair: ", world.TimeToNewChair), ("CurrentRules: ", world.CurrentRuleSet),
          ("CurrentDay: ", world.CurrentDay), ("CurrentChair: ", world.CurrentChair.Value.ID), ("NumHare: ", world.NumHare), ("NumStag: ", world.NumStag),
-         ("AllRules: ", world.AllRules))
+         ("AllRules: ", world.AllRules), ("TotalSanctions:", world.NumberOfCrimes))
         
     let currentWorld =
         {
@@ -52,6 +52,7 @@ let main argv =
             CurrentChair = None;
             NumHare = 15;
             NumStag = 15;
+            NumberOfCrimes = 0;
             CurrentRuleSet = initialiseRuleSet;
             AllRules = initialiseAllRules;
             BuildingRewardPerDay = 0.0;
@@ -179,7 +180,9 @@ let main argv =
             agentsAfterWorking
             |> assignShelters currentWorld
         // Sanction
-            |> detectCrime currentWorld idealEnergyAssignment idealWorkStatus
+        let (agentsAfterSanction, currentWorld) = detectCrime currentWorld idealEnergyAssignment idealWorkStatus agentsAfterResorceAllocation
+        let agentsAfterResorceAllocation = 
+            agentsAfterSanction
             |> sanction currentWorld
         // Allocate food
             |> allocateFood idealEnergyAssignment
