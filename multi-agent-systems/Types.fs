@@ -129,6 +129,7 @@ type WorldState =
         NumStag : int;
         CurrentRuleSet : RuleSet;
         AllRules : RuleSet;
+        NumberOfCrimes : int;
         BuildingRewardPerDay : float;
         HuntingRewardPerDay : float;
         BuildingAverageTotalReward : float;
