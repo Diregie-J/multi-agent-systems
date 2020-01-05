@@ -10,6 +10,8 @@ from zipfile import ZipFile
 import os.path
 import os
 
+boxPlotDayLimit = 300
+
 parser = argparse.ArgumentParser()
 
 parser.add_argument('numRuns', help="number of sim runs")
@@ -24,6 +26,8 @@ def my_autopct(pct):
 for k in range(0, numRuns):
     inputPath = os.path.join('..', 'csv', 'test' + str(k) + '.csv')
     data = pd.read_csv(inputPath)
+
+    simulationDays = len(data.index)
 
     plot = plt.figure()
     axes = plt.subplot(111)
@@ -168,55 +172,57 @@ for k in range(0, numRuns):
 
         ############## energy distribution plot ##############################
 
-        plot.clear()
-        axes = plt.subplot(111)
+        if simulationDays < boxPlotDayLimit:
 
-        filtered_col = []
+            plot.clear()
+            axes = plt.subplot(111)
 
-        energy = data.filter(regex="Energy$", axis=1)
-        energy.drop(["Average Energy"], axis=1)
-        for x in range(len(energy.T.columns)):
-            col = energy.T[x]
-            filtered_col.append(col.dropna())
+            filtered_col = []
 
-        axes.boxplot(filtered_col, vert=True, patch_artist=True)
+            energy = data.filter(regex="Energy$", axis=1)
+            energy.drop(["Average Energy"], axis=1)
+            for x in range(len(energy.T.columns)):
+                col = energy.T[x]
+                filtered_col.append(col.dropna())
 
-        finalDay = data.iloc[-1]["CurrentDay"]
-        ticks = []
-        tickVal = 0
+            axes.boxplot(filtered_col, vert=True, patch_artist=True)
 
-        if finalDay < 20:
-            pass
+            finalDay = data.iloc[-1]["CurrentDay"]
+            ticks = []
+            tickVal = 0
 
-        elif finalDay < 40:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 2
-            axes.set_xticks(ticks)
-            axes.set_xticklabels(ticks)
+            if finalDay < 20:
+                pass
 
-        else:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 5
-        
-            while len(ticks) > 20:
-                del ticks[1::2]
-            axes.set_xticks(ticks)
-            axes.set_xticklabels(ticks)
+            elif finalDay < 40:
+                while tickVal < finalDay:
+                    ticks.append(tickVal)
+                    tickVal += 2
+                axes.set_xticks(ticks)
+                axes.set_xticklabels(ticks)
 
-        axes.set_title('Agent Energy Distribution')
+            else:
+                while tickVal < finalDay:
+                    ticks.append(tickVal)
+                    tickVal += 5
+            
+                while len(ticks) > 20:
+                    del ticks[1::2]
+                axes.set_xticks(ticks)
+                axes.set_xticklabels(ticks)
 
-        # adding horizontal grid lines
-        axes.yaxis.grid(True)
-        axes.set_xlabel('Day')
-        axes.set_ylabel('Agent Energy')
-        axes.set_ylim(0, 100)
+            axes.set_title('Agent Energy Distribution')
 
-        fig = (plot, "boxPlotEnergy" + str(k) + ".png")
-        fig[0].savefig(fig[1])
-        zip.write(fig[1])
-        plotNames.append(fig[1])
+            # adding horizontal grid lines
+            axes.yaxis.grid(True)
+            axes.set_xlabel('Day')
+            axes.set_ylabel('Agent Energy')
+            axes.set_ylim(0, 100)
+
+            fig = (plot, "boxPlotEnergy" + str(k) + ".png")
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
 
         ################### egotism plot #####################################
 
@@ -268,54 +274,56 @@ for k in range(0, numRuns):
 
         ################### Fairness plot #####################################
 
-        plot.clear()
-        axes = plt.subplot(111)
+        if simulationDays < boxPlotDayLimit:
 
-        filtered_col = []
+            plot.clear()
+            axes = plt.subplot(111)
 
-        fairness = data.filter(regex="Fairness$", axis=1)
-        fairness.drop(["Average Fairness"], axis=1)
-        for x in range(len(fairness.T.columns)):
-            col = fairness.T[x]
-            filtered_col.append(col.dropna())
+            filtered_col = []
 
-        axes.boxplot(filtered_col, vert=True, patch_artist=True)
+            fairness = data.filter(regex="Fairness$", axis=1)
+            fairness.drop(["Average Fairness"], axis=1)
+            for x in range(len(fairness.T.columns)):
+                col = fairness.T[x]
+                filtered_col.append(col.dropna())
 
-        finalDay = data.iloc[-1]["CurrentDay"]
-        ticks = []
-        tickVal = 0
+            axes.boxplot(filtered_col, vert=True, patch_artist=True)
 
-        if finalDay < 20:
-            pass
+            finalDay = data.iloc[-1]["CurrentDay"]
+            ticks = []
+            tickVal = 0
 
-        elif finalDay < 40:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 2
-            axes.set_xticks(ticks)
-            axes.set_xticklabels(ticks)
+            if finalDay < 20:
+                pass
 
-        else:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 5
-        
-            while len(ticks) > 20:
-                del ticks[1::2]
-            axes.set_xticks(ticks)
-            axes.set_xticklabels(ticks)
+            elif finalDay < 40:
+                while tickVal < finalDay:
+                    ticks.append(tickVal)
+                    tickVal += 2
+                axes.set_xticks(ticks)
+                axes.set_xticklabels(ticks)
 
-        axes.set_title('Agent Fairness Distribution')
+            else:
+                while tickVal < finalDay:
+                    ticks.append(tickVal)
+                    tickVal += 5
+            
+                while len(ticks) > 20:
+                    del ticks[1::2]
+                axes.set_xticks(ticks)
+                axes.set_xticklabels(ticks)
 
-        # adding horizontal grid lines
-        axes.yaxis.grid(True)
-        axes.set_xlabel('Day')
-        axes.set_ylabel('Agent Fairness')
+            axes.set_title('Agent Fairness Distribution')
 
-        fig = (plot, "fairness" + str(k) + ".png")
-        fig[0].savefig(fig[1])
-        zip.write(fig[1])
-        plotNames.append(fig[1])
+            # adding horizontal grid lines
+            axes.yaxis.grid(True)
+            axes.set_xlabel('Day')
+            axes.set_ylabel('Agent Fairness')
+
+            fig = (plot, "fairness" + str(k) + ".png")
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
 
         ###################### Infamy plot ####################################
 
@@ -335,55 +343,57 @@ for k in range(0, numRuns):
 
         ####################### infamy box plot ###############################
 
-        plot.clear()
-        axes = plt.subplot(111)
+        if simulationDays < boxPlotDayLimit:
 
-        filtered_col = []
+            plot.clear()
+            axes = plt.subplot(111)
 
-        infamy = data.filter(regex="Infamy$", axis=1)
-        infamy.drop(["Average Infamy"], axis=1)
-        for x in range(len(infamy.T.columns)):
-            col = infamy.T[x]
-            filtered_col.append(col.dropna())
+            filtered_col = []
 
-        axes.boxplot(filtered_col, vert=True, patch_artist=True)
+            infamy = data.filter(regex="Infamy$", axis=1)
+            infamy.drop(["Average Infamy"], axis=1)
+            for x in range(len(infamy.T.columns)):
+                col = infamy.T[x]
+                filtered_col.append(col.dropna())
 
-        finalDay = data.iloc[-1]["CurrentDay"]
-        ticks = []
-        tickVal = 0
+            axes.boxplot(filtered_col, vert=True, patch_artist=True)
 
-        if finalDay < 20:
-            pass
+            finalDay = data.iloc[-1]["CurrentDay"]
+            ticks = []
+            tickVal = 0
 
-        elif finalDay < 40:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 2
-            axes.set_xticks(ticks)
-            axes.set_xticklabels(ticks)
+            if finalDay < 20:
+                pass
 
-        else:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 5
-        
-            while len(ticks) > 20:
-                del ticks[1::2]
-            axes.set_xticks(ticks)
-            axes.set_xticklabels(ticks)
+            elif finalDay < 40:
+                while tickVal < finalDay:
+                    ticks.append(tickVal)
+                    tickVal += 2
+                axes.set_xticks(ticks)
+                axes.set_xticklabels(ticks)
 
-        axes.set_title('Agent Infamy Distribution')
+            else:
+                while tickVal < finalDay:
+                    ticks.append(tickVal)
+                    tickVal += 5
+            
+                while len(ticks) > 20:
+                    del ticks[1::2]
+                axes.set_xticks(ticks)
+                axes.set_xticklabels(ticks)
 
-        # adding horizontal grid lines
-        axes.yaxis.grid(True)
-        axes.set_xlabel('Day')
-        axes.set_ylabel('Agent Infamy')
-        axes.set_ylim(0)
+            axes.set_title('Agent Infamy Distribution')
 
-        fig = (plot, "boxPlotInfamy" + str(k) + ".png")
-        fig[0].savefig(fig[1])
-        zip.write(fig[1])
-        plotNames.append(fig[1])
+            # adding horizontal grid lines
+            axes.yaxis.grid(True)
+            axes.set_xlabel('Day')
+            axes.set_ylabel('Agent Infamy')
+            axes.set_ylim(0)
+
+            fig = (plot, "boxPlotInfamy" + str(k) + ".png")
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
 
         ######################## Shelter rule plot ############################
 

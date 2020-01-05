@@ -10,6 +10,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 from PyQt5 import QtWidgets
 from matplotlib.figure import Figure
+from matplotlib.animation import FFMPegWriter
 from model import Model
 from zipfile import ZipFile
 
