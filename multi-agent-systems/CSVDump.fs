@@ -5,7 +5,7 @@ open Config
 open Types
 
 //// csv file headings
-let headings = "CurrentDay,Buildings,CurrentChair,TimeToNewChair,CurrentShelterRule,CurrentVotingRule,CurrentFoodRule,CurrentWorkRule,CurrentMaxPunishment,CurrentSanctionStepSize,NumHare,NumStag,BuildingRewardPerDay,HuntingRewardPerDay,BuildingAverageTotalReward,HuntingAverageTotalReward,"
+let headings = "CurrentDay,Buildings,CurrentChair,TimeToNewChair,CurrentShelterRule,CurrentVotingRule,CurrentFoodRule,CurrentWorkRule,CurrentMaxPunishment,CurrentSanctionStepSize,NumHare,NumStag,NumberOfCrimes,BuildingRewardPerDay,HuntingRewardPerDay,BuildingAverageTotalReward,HuntingAverageTotalReward,"
 
 // agent headings duplicated for each agent
 let agentHeadings = "[ID]Susceptibility,[ID]Idealism,[ID]Egotism,[ID]Fairness,[ID]Gain,[ID]EnergyDepreciation,[ID]EnergyConsumed,[ID]Infamy,[ID]Energy,[ID]HuntedFood,[ID]Today'sActivity,[ID]AccessToShelter,[ID]SelfConfidence,[ID]Today'sHuntOption,[ID]FoodSharing,[ID]LastCrimeDate,[ID]AccessToFood,[ID]Alive,"
@@ -49,6 +49,8 @@ let csvdump (world : WorldState) (unsortedAgents : Agent list) (csvwriter : Stre
     //csvwriter.Write(",")
     //csvwriter.Write(world.AllRules)
     //csvwriter.Write(",")
+    csvwriter.Write(world.NumberOfCrimes)
+    csvwriter.Write(",")
     csvwriter.Write(world.BuildingRewardPerDay)
     csvwriter.Write(",")
     csvwriter.Write(world.HuntingRewardPerDay)

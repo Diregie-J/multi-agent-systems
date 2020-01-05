@@ -50,3 +50,9 @@ let Tau = 10.0
 let Gamma = 5.0
 
 let AgentMaxEnergy = 100.0
+
+// Energy base penalty
+let BasePenalty = 6.0
+
+// Half-life of infamy
+let InfamyDecayDays = 8

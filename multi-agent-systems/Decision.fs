@@ -115,7 +115,7 @@ let updateWorkRewardMatrices (agents: Agent list) : Agent list =
         let updateHuntingOptionReward =
             List.zip [for i in 0..10 -> i] agent.RhuntingEnergySplit
             |> List.map (fun (option, reward) ->
-                if option = agent.TodaysHuntOption
+                if option = agent.TodaysHuntOption && (fst agent.TodaysActivity = HUNTING)
                     then (getCumulativeAverage (snd reward) (fst reward) todaysReward, snd reward + 1)
                 else reward
             )
