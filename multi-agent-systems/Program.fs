@@ -133,7 +133,9 @@ let main argv =
         // Work allocation
         let agentsWithJobs =
             livingAgents
-            |> List.map (fun el -> {el with FoodShared = false}) // Reset foodsharingn status for agents
+            |> List.map (fun el -> 
+                {el with FoodShared = false; HuntedFood = 0.0;}
+            ) // Reset variables for a clean printing
             |> List.map (fun el ->
                 let decision = workAllocation el currentWorld // To verify
                 match decision with
