@@ -95,7 +95,8 @@ let sanction (world: WorldState) (agents: Agent list) : Agent list =
                 | Exile -> {el with Alive = false}
                 | _ -> failwith "Invalid maximum punishment setting"
         else {el with AccessToShelter = el.AccessToShelter;
-                        AccessToFood = true}
+                        AccessToFood = true;
+                        Energy = max 0.0 el.Energy - BasePenalty}
     )
 
 
