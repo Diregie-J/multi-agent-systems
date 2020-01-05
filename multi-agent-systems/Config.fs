@@ -11,13 +11,13 @@ let numberOfRules = 5
 
 let costOfHunting = 5.0
 
-let staggiEnergyValue = 200.0
-let staggiProbability = 0.1 // likelihood is 1 in 10 intervals
+let staggiEnergyValue = 300.0
+let staggiProbability = 0.3// likelihood is 1 in 10 intervals
 let staggiMeanRegenRate = 0.6
 let staggiMinIndividual = costOfHunting * 0.4
 let staggiMinCollective = costOfHunting * 2.0
 let rabbosEnergyValue = 50.0
-let rabbosProbability = 0.3 // likelihood is 3 in 10 intervals
+let rabbosProbability = 0.5 // likelihood is 3 in 10 intervals
 let rabbosMinRequirement = costOfHunting * 0.4
 let rabbosMeanRegenRate = 0.6
 
@@ -28,8 +28,8 @@ let es = 35.0 // energy cost per worker to build one shelter
 let ep = 0.8 // maximum shelter energy preservation
 let rb = 5.0 //base energy decay rate
 
-let maxNumStag = 30
-let maxNumHare = 30
+let maxNumStag = 80
+let maxNumHare = 80
 
 let vetoThreshold = 2.0
 let nominationThreshold = 0.5
