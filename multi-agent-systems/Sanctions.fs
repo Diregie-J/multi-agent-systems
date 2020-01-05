@@ -53,15 +53,23 @@ let idealAllocation (world: WorldState) (agents: Agent list) (totalFoodShared: f
     (targetEnergyList, targetWorkStatus)
 
 // Allocate food according to precomputed assignment
-let allocateFood (targetEnergyList: float list) (agents: Agent list): Agent list = 
+let allocateFood (world: WorldState) (targetEnergyList: float list) (agents: Agent list): Agent list = 
     List.zip agents targetEnergyList
     |> List.map (fun (agent, energy) ->
-        if agent.AccessToFood = true
-        then 
-            let newGain = min (agent.Gain + energy) (AgentMaxEnergy - agent.Energy) // Limit gain to the current energy headroom
-            {agent with Energy = agent.Energy + newGain;
-                            Gain = newGain}
-        else {agent with Gain = 0.0}
+        let newGain = 
+            if agent.LastCrimeDate = world.CurrentDay && agent.AccessToFood = true
+                then 
+                    energy - BasePenalty    // Food allocation - base penalty
+                    |> min (AgentMaxEnergy - agent.Energy)  // Capped to maxEnergy
+                    |> max -agent.Energy  // limited to 0
+            elif agent.LastCrimeDate = world.CurrentDay
+                then
+                    max -BasePenalty -agent.Energy
+            else    // If crime not caught, agent must have access to food
+                min (agent.Gain + energy) (AgentMaxEnergy - agent.Energy)
+
+        {agent with Energy = agent.Energy + newGain;
+                        Gain = newGain}
     )
 
 
@@ -95,8 +103,7 @@ let sanction (world: WorldState) (agents: Agent list) : Agent list =
                 | Exile -> {el with Alive = false}
                 | _ -> failwith "Invalid maximum punishment setting"
         else {el with AccessToShelter = el.AccessToShelter;
-                        AccessToFood = true;
-                        Energy = max 0.0 el.Energy - BasePenalty}
+                        AccessToFood = true;}
     )
 
 
@@ -110,7 +117,7 @@ let detectCrime (world: WorldState) (expectedEnergyGain: float list) (expectedWo
         |> List.map (fun (agent, gain) ->
             if agent.Gain > gain && rand.NextDouble() < CrimeDiscoveryRate 
                 then numCrimes <- numCrimes + 1
-                     {agent with Infamy = min 1.0 agent.Infamy + InfamyStep; LastCrimeDate = world.CurrentDay}
+                     {agent with Infamy = min 1.0 (agent.Infamy + InfamyStep); LastCrimeDate = world.CurrentDay}
             else agent
         )
 
@@ -119,7 +126,7 @@ let detectCrime (world: WorldState) (expectedEnergyGain: float list) (expectedWo
         |> List.map (fun (agent, job) ->
             if fst agent.TodaysActivity = NONE && job <> NONE && rand.NextDouble() < CrimeDiscoveryRate 
                 then numCrimes <- numCrimes + 1
-                     {agent with Infamy = min 1.0 agent.Infamy + InfamyStep; LastCrimeDate = world.CurrentDay}
+                     {agent with Infamy = min 1.0 (agent.Infamy + InfamyStep); LastCrimeDate = world.CurrentDay}
             else agent
         )
 

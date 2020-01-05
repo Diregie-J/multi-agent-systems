@@ -185,7 +185,7 @@ let main argv =
             agentsAfterSanction
             |> sanction currentWorld
         // Allocate food
-            |> allocateFood idealEnergyAssignment
+            |> allocateFood currentWorld idealEnergyAssignment
         // Energy decay due to working
             |> reduceEnergyForWorking
         // End-of-turn energy decay
