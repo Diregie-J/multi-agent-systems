@@ -79,7 +79,7 @@ let infamyDecay (world: WorldState) (agents: Agent list) : Agent list =
     // Halve infamy every 8 days
     |> List.map (fun el ->
         if world.CurrentDay <> el.LastCrimeDate then
-            match (world.CurrentDay - el.LastCrimeDate) % 8 with
+            match (world.CurrentDay - el.LastCrimeDate) % InfamyDecayDays with
             | 0 -> {el with Infamy = el.Infamy / 2.0 |> floor}
             | _ -> el
         else el
