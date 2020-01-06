@@ -27,8 +27,8 @@ let RLalg (choices : float list) (world : WorldState) = //currentDay gamma tau =
 
     let maxim = List.max choices
     let indexedChoices = choices |> List.mapi (fun id x -> (id,x))
-    // Added random shuffling for more than 1 option
-    // This will make agents' choices more randomised
+    // Added random shuffling if more than 1 work options have the same reward value
+    // This will prevent the order of the list from having an effect on the choice made
     let bestOptions = indexedChoices |> List.filter (fun x -> (snd x) = maxim) |> List.sortBy (fun _ -> rand.Next())
     // if there is more than one best option don't eliminate any of them from the exploration options
     // if there is only one best option then remove it from the options for exploration

@@ -76,7 +76,7 @@ let allocateFood (world: WorldState) (targetEnergyList: float list) (agents: Age
 // Update at end-of-day
 let infamyDecay (world: WorldState) (agents: Agent list) : Agent list =
     agents
-    // Halve infamy every 8 days
+    // Halve infamy every InfamyDecayDays days
     |> List.map (fun el ->
         if world.CurrentDay <> el.LastCrimeDate then
             match (world.CurrentDay - el.LastCrimeDate) % InfamyDecayDays with
