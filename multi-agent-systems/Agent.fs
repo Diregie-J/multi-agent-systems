@@ -102,7 +102,8 @@ let initialiseAgentDecisions (agents : Agent list) : Agent list =
 let reduceEnergyForWorking (agents: Agent list) : Agent list =
     agents
     |> List.map (fun el -> 
-        if fst el.TodaysActivity = NONE then el
+        if fst el.TodaysActivity = NONE 
+            then {el with EnergyConsumed = 0.0;}
         elif fst el.TodaysActivity = HUNTING
             then {el with Energy = el.Energy - costOfHunting;
                             EnergyConsumed = costOfHunting}
