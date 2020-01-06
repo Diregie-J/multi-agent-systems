@@ -142,15 +142,20 @@ for k in range(0, numRuns):
         axes = plt.subplot(111)
 
         energy = data.filter(regex="Energy$", axis=1)
-        energy.apply(lambda x: axes.scatter(x.index+1, x, c='g', marker="x"))
+        if len(energy) < 100:
+            energy.apply(lambda x: axes.scatter(x.index+1, x, c='g', marker="x"))
         energy["Average"] = data["Average Energy"]
         axes.plot(data["CurrentDay"], energy["Average"], color='blue')
         axes.set_ylim(0,100)
         ybox1 = TextArea("Energy: ", textprops=dict(color="k", rotation=90,ha='left',va='bottom'))
-        ybox2 = TextArea("Individual/",     textprops=dict(color="g", rotation=90,ha='left',va='bottom'))
+        if len(energy) < 100:
+            ybox2 = TextArea("Individual/",     textprops=dict(color="g", rotation=90,ha='left',va='bottom'))
         ybox3 = TextArea("Average", textprops=dict(color="b", rotation=90,ha='left',va='bottom'))
 
-        ybox = VPacker(children=[ybox3, ybox2, ybox1],align="bottom", pad=0, sep=2)
+        if len(energy) < 100:
+            ybox = VPacker(children=[ybox3, ybox2, ybox1],align="bottom", pad=0, sep=2)
+        else:
+            ybox = VPacker(children=[ybox3, ybox1],align="bottom", pad=0, sep=2)
 
         anchored_ybox = AnchoredOffsetbox(loc=8, child=ybox, pad=0., frameon=False, bbox_to_anchor=(-0.08, 0.3),
                                     bbox_transform=axes.transAxes, borderpad=0.)
@@ -172,57 +177,38 @@ for k in range(0, numRuns):
 
         ############## energy distribution plot ##############################
 
-        if simulationDays < boxPlotDayLimit:
+        plot.clear()
+        axes = plt.subplot(111)
 
-            plot.clear()
-            axes = plt.subplot(111)
+        energy = data.filter(regex="Energy$", axis=1)
+        energy.drop(["Average Energy"], axis=1)
+        day = data["CurrentDay"]        
 
-            filtered_col = []
+        while len(energy) > 300:
+            day = day[::2]
+            energy = energy[::2]
 
-            energy = data.filter(regex="Energy$", axis=1)
-            energy.drop(["Average Energy"], axis=1)
-            for x in range(len(energy.T.columns)):
-                col = energy.T[x]
-                filtered_col.append(col.dropna())
+        axes.plot(day, energy.quantile(0.9, axis=1), color="indianred")
+        #axes.plot(day, energy.quantile(0.8, axis=1), color="orange")
+        axes.plot(day, energy.quantile(0.7, axis=1), color="gold")
+        axes.plot(day, energy.quantile(0.5, axis=1), color="lightgreen")
+        axes.plot(day, energy.quantile(0.3, axis=1), color="deepskyblue")
+        #axes.plot(day, energy.quantile(0.2, axis=1), color="plum")
+        axes.plot(day, energy.quantile(0.1, axis=1), color="mediumpurple")
+        axes.legend()
 
-            axes.boxplot(filtered_col, vert=True, patch_artist=True)
+        axes.set_title('Agent Energy Distribution')
 
-            finalDay = data.iloc[-1]["CurrentDay"]
-            ticks = []
-            tickVal = 0
+        # adding horizontal grid lines
+        axes.set_xlabel('Day')
+        axes.set_ylabel('Energy')
+        axes.set_ylim(0, 100)
 
-            if finalDay < 20:
-                pass
 
-            elif finalDay < 40:
-                while tickVal < finalDay:
-                    ticks.append(tickVal)
-                    tickVal += 2
-                axes.set_xticks(ticks)
-                axes.set_xticklabels(ticks)
-
-            else:
-                while tickVal < finalDay:
-                    ticks.append(tickVal)
-                    tickVal += 5
-            
-                while len(ticks) > 20:
-                    del ticks[1::2]
-                axes.set_xticks(ticks)
-                axes.set_xticklabels(ticks)
-
-            axes.set_title('Agent Energy Distribution')
-
-            # adding horizontal grid lines
-            axes.yaxis.grid(True)
-            axes.set_xlabel('Day')
-            axes.set_ylabel('Agent Energy')
-            axes.set_ylim(0, 100)
-
-            fig = (plot, "boxPlotEnergy" + str(k) + ".png")
-            fig[0].savefig(fig[1])
-            zip.write(fig[1])
-            plotNames.append(fig[1])
+        fig = (plot, "energyDistribution" + str(k) + ".png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
 
         ################### egotism plot #####################################
 
@@ -274,56 +260,36 @@ for k in range(0, numRuns):
 
         ################### Fairness plot #####################################
 
-        if simulationDays < boxPlotDayLimit:
+        plot.clear()
+        axes = plt.subplot(111)
 
-            plot.clear()
-            axes = plt.subplot(111)
+        fairness = data.filter(regex="Fairness$", axis=1)
+        fairness.drop(["Average Fairness"], axis=1)
+        day = data["CurrentDay"]        
 
-            filtered_col = []
+        while len(fairness) > 300:
+            day = day[::2]
+            fairness = fairness[::2]
 
-            fairness = data.filter(regex="Fairness$", axis=1)
-            fairness.drop(["Average Fairness"], axis=1)
-            for x in range(len(fairness.T.columns)):
-                col = fairness.T[x]
-                filtered_col.append(col.dropna())
+        axes.plot(day, fairness.quantile(0.9, axis=1), color="indianred")
+        #axes.plot(day, fairness.quantile(0.8, axis=1), color="orange")
+        axes.plot(day, fairness.quantile(0.7, axis=1), color="gold")
+        axes.plot(day, fairness.quantile(0.5, axis=1), color="lightgreen")
+        axes.plot(day, fairness.quantile(0.3, axis=1), color="deepskyblue")
+        #axes.plot(day, fairness.quantile(0.2, axis=1), color="plum")
+        axes.plot(day, fairness.quantile(0.1, axis=1), color="mediumpurple")
+        axes.legend()
 
-            axes.boxplot(filtered_col, vert=True, patch_artist=True)
+        axes.set_title('Agent Fairness Distribution')
 
-            finalDay = data.iloc[-1]["CurrentDay"]
-            ticks = []
-            tickVal = 0
+        # adding horizontal grid lines
+        axes.set_xlabel('Day')
+        axes.set_ylabel('Fairness')
 
-            if finalDay < 20:
-                pass
-
-            elif finalDay < 40:
-                while tickVal < finalDay:
-                    ticks.append(tickVal)
-                    tickVal += 2
-                axes.set_xticks(ticks)
-                axes.set_xticklabels(ticks)
-
-            else:
-                while tickVal < finalDay:
-                    ticks.append(tickVal)
-                    tickVal += 5
-            
-                while len(ticks) > 20:
-                    del ticks[1::2]
-                axes.set_xticks(ticks)
-                axes.set_xticklabels(ticks)
-
-            axes.set_title('Agent Fairness Distribution')
-
-            # adding horizontal grid lines
-            axes.yaxis.grid(True)
-            axes.set_xlabel('Day')
-            axes.set_ylabel('Agent Fairness')
-
-            fig = (plot, "fairness" + str(k) + ".png")
-            fig[0].savefig(fig[1])
-            zip.write(fig[1])
-            plotNames.append(fig[1])
+        fig = (plot, "fairnessDistribution" + str(k) + ".png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
 
         ###################### Infamy plot ####################################
 
@@ -343,57 +309,38 @@ for k in range(0, numRuns):
 
         ####################### infamy box plot ###############################
 
-        if simulationDays < boxPlotDayLimit:
+        plot.clear()
+        axes = plt.subplot(111)
 
-            plot.clear()
-            axes = plt.subplot(111)
+        infamy = data.filter(regex="Infamy$", axis=1)
+        infamy.drop(["Average Infamy"], axis=1)
+        day = data["CurrentDay"]        
 
-            filtered_col = []
+        while len(infamy) > 300:
+            day = day[::2]
+            infamy = infamy[::2]
 
-            infamy = data.filter(regex="Infamy$", axis=1)
-            infamy.drop(["Average Infamy"], axis=1)
-            for x in range(len(infamy.T.columns)):
-                col = infamy.T[x]
-                filtered_col.append(col.dropna())
+        axes.plot(day, infamy.quantile(0.9, axis=1), color="indianred")
+        #axes.plot(day, infamy.quantile(0.8, axis=1), color="orange")
+        axes.plot(day, infamy.quantile(0.7, axis=1), color="gold")
+        axes.plot(day, infamy.quantile(0.5, axis=1), color="lightgreen")
+        axes.plot(day, infamy.quantile(0.3, axis=1), color="deepskyblue")
+        #axes.plot(day, infamy.quantile(0.2, axis=1), color="plum")
+        axes.plot(day, infamy.quantile(0.1, axis=1), color="mediumpurple")
+        axes.legend()
 
-            axes.boxplot(filtered_col, vert=True, patch_artist=True)
+        axes.set_title('Agent Infamy Distribution')
 
-            finalDay = data.iloc[-1]["CurrentDay"]
-            ticks = []
-            tickVal = 0
+        # adding horizontal grid lines
+        axes.set_xlabel('Day')
+        axes.set_ylabel('Infamy')
+        axes.set_ylim(0)
 
-            if finalDay < 20:
-                pass
 
-            elif finalDay < 40:
-                while tickVal < finalDay:
-                    ticks.append(tickVal)
-                    tickVal += 2
-                axes.set_xticks(ticks)
-                axes.set_xticklabels(ticks)
-
-            else:
-                while tickVal < finalDay:
-                    ticks.append(tickVal)
-                    tickVal += 5
-            
-                while len(ticks) > 20:
-                    del ticks[1::2]
-                axes.set_xticks(ticks)
-                axes.set_xticklabels(ticks)
-
-            axes.set_title('Agent Infamy Distribution')
-
-            # adding horizontal grid lines
-            axes.yaxis.grid(True)
-            axes.set_xlabel('Day')
-            axes.set_ylabel('Agent Infamy')
-            axes.set_ylim(0)
-
-            fig = (plot, "boxPlotInfamy" + str(k) + ".png")
-            fig[0].savefig(fig[1])
-            zip.write(fig[1])
-            plotNames.append(fig[1])
+        fig = (plot, "infamyDistribution" + str(k) + ".png")
+        fig[0].savefig(fig[1])
+        zip.write(fig[1])
+        plotNames.append(fig[1])
 
         ######################## Shelter rule plot ############################
 

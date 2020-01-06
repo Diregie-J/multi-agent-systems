@@ -10,7 +10,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
 from PyQt5 import QtWidgets
 from matplotlib.figure import Figure
-from matplotlib.animation import FFMPegWriter
+from matplotlib.animation import FFMpegWriter
 from model import Model
 from zipfile import ZipFile
 
@@ -45,46 +45,29 @@ class MplWidget(QtWidgets.QWidget):
     def defaultInfamyBoxPlot(self, data, save):
         self.clear()
 
-        filtered_col = []
-        
         infamy = data.filter(regex="Infamy$", axis=1)
         infamy.drop(["Average Infamy"], axis=1)
-        for x in range(len(infamy.T.columns)):
-            col = infamy.T[x]
-            filtered_col.append(col.dropna())
+        day = data["CurrentDay"]        
 
-        self.canvas.axes.boxplot(filtered_col, vert=True, patch_artist=True)
+        while len(infamy) > 300:
+            day = day[::2]
+            infamy = infamy[::2]
 
-        finalDay = data.iloc[-1]["CurrentDay"]
-        ticks = []
-        tickVal = 0
-
-        if finalDay < 20:
-            pass
-
-        elif finalDay < 40:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 2
-            self.canvas.axes.set_xticks(ticks)
-            self.canvas.axes.set_xticklabels(ticks)
-
-        else:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 5
-        
-            while len(ticks) > 20:
-                del ticks[1::2]
-            self.canvas.axes.set_xticks(ticks)
-            self.canvas.axes.set_xticklabels(ticks)
+        self.canvas.axes.plot(day, infamy.quantile(0.9, axis=1), color="indianred")
+        #self.canvas.axes.plot(day, infamy.quantile(0.8, axis=1), color="orange")
+        self.canvas.axes.plot(day, infamy.quantile(0.7, axis=1), color="gold")
+        self.canvas.axes.plot(day, infamy.quantile(0.5, axis=1), color="lightgreen")
+        self.canvas.axes.plot(day, infamy.quantile(0.3, axis=1), color="deepskyblue")
+        #self.canvas.axes.plot(day, infamy.quantile(0.2, axis=1), color="plum")
+        self.canvas.axes.plot(day, infamy.quantile(0.1, axis=1), color="mediumpurple")
+        self.canvas.axes.legend()
 
         self.canvas.axes.set_title('Agent Infamy Distribution')
 
         # adding horizontal grid lines
-        self.canvas.axes.yaxis.grid(True)
         self.canvas.axes.set_xlabel('Day')
-        self.canvas.axes.set_ylabel('Agent Infamy')
+        self.canvas.axes.set_ylabel('Infamy')
+        self.canvas.axes.set_ylim(0)
 
         if save:
             return self.canvas.fig
@@ -746,47 +729,29 @@ class MplWidget(QtWidgets.QWidget):
 
     def defaultEnergyBoxPlot(self, data, save):
         self.clear()
-
-        filtered_col = []
         
         energy = data.filter(regex="Energy$", axis=1)
         energy.drop(["Average Energy"], axis=1)
-        for x in range(len(energy.T.columns)):
-            col = energy.T[x]
-            filtered_col.append(col.dropna())
+        day = data["CurrentDay"]        
 
-        self.canvas.axes.boxplot(filtered_col, vert=True, patch_artist=True)
+        while len(energy) > 300:
+            day = day[::2]
+            energy = energy[::2]
 
-        finalDay = data.iloc[-1]["CurrentDay"]
-        ticks = []
-        tickVal = 0
-
-        if finalDay < 20:
-            pass
-
-        elif finalDay < 40:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 2
-            self.canvas.axes.set_xticks(ticks)
-            self.canvas.axes.set_xticklabels(ticks)
-
-        else:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 5
-        
-            while len(ticks) > 20:
-                del ticks[1::2]
-            self.canvas.axes.set_xticks(ticks)
-            self.canvas.axes.set_xticklabels(ticks)
+        self.canvas.axes.plot(day, energy.quantile(0.9, axis=1), color="indianred")
+        #self.canvas.axes.plot(day, energy.quantile(0.8, axis=1), color="orange")
+        self.canvas.axes.plot(day, energy.quantile(0.7, axis=1), color="gold")
+        self.canvas.axes.plot(day, energy.quantile(0.5, axis=1), color="lightgreen")
+        self.canvas.axes.plot(day, energy.quantile(0.3, axis=1), color="deepskyblue")
+        #self.canvas.axes.plot(day, energy.quantile(0.2, axis=1), color="plum")
+        self.canvas.axes.plot(day, energy.quantile(0.1, axis=1), color="mediumpurple")
+        self.canvas.axes.legend()
 
         self.canvas.axes.set_title('Agent Energy Distribution')
 
         # adding horizontal grid lines
-        self.canvas.axes.yaxis.grid(True)
         self.canvas.axes.set_xlabel('Day')
-        self.canvas.axes.set_ylabel('Agent Energy')
+        self.canvas.axes.set_ylabel('Energy')
         self.canvas.axes.set_ylim(0, 100)
 
         if save:
@@ -835,46 +800,29 @@ class MplWidget(QtWidgets.QWidget):
 
     def defaultFairnessPlot(self, data, save):
         self.clear()
-        filtered_col = []
 
         fairness = data.filter(regex="Fairness$", axis=1)
         fairness.drop(["Average Fairness"], axis=1)
-        for x in range(len(fairness.T.columns)):
-            col = fairness.T[x]
-            filtered_col.append(col.dropna())
+        day = data["CurrentDay"]        
 
-        self.canvas.axes.boxplot(filtered_col, vert=True, patch_artist=True)
+        while len(fairness) > 300:
+            day = day[::2]
+            fairness = fairness[::2]
 
-        finalDay = data.iloc[-1]["CurrentDay"]
-        ticks = []
-        tickVal = 0
-
-        if finalDay < 20:
-            pass
-
-        elif finalDay < 40:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 2
-            self.canvas.axes.set_xticks(ticks)
-            self.canvas.axes.set_xticklabels(ticks)
-
-        else:
-            while tickVal < finalDay:
-                ticks.append(tickVal)
-                tickVal += 5
-        
-            while len(ticks) > 20:
-                del ticks[1::2]
-            self.canvas.axes.set_xticks(ticks)
-            self.canvas.axes.set_xticklabels(ticks)
+        self.canvas.axes.plot(day, fairness.quantile(0.9, axis=1), color="indianred")
+        #self.canvas.axes.plot(day, fairness.quantile(0.8, axis=1), color="orange")
+        self.canvas.axes.plot(day, fairness.quantile(0.7, axis=1), color="gold")
+        self.canvas.axes.plot(day, fairness.quantile(0.5, axis=1), color="lightgreen")
+        self.canvas.axes.plot(day, fairness.quantile(0.3, axis=1), color="deepskyblue")
+        #self.canvas.axes.plot(day, fairness.quantile(0.2, axis=1), color="plum")
+        self.canvas.axes.plot(day, fairness.quantile(0.1, axis=1), color="mediumpurple")
+        self.canvas.axes.legend()
 
         self.canvas.axes.set_title('Agent Fairness Distribution')
 
         # adding horizontal grid lines
-        self.canvas.axes.yaxis.grid(True)
         self.canvas.axes.set_xlabel('Day')
-        self.canvas.axes.set_ylabel('Agent Fairness')
+        self.canvas.axes.set_ylabel('Fairness')
 
         if save:
             return self.canvas.fig
