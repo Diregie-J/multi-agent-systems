@@ -133,9 +133,6 @@ let main argv =
         // Work allocation
         let agentsWithJobs =
             livingAgents
-            |> List.map (fun el -> 
-                {el with FoodShared = false; HuntedFood = 0.0;}
-            ) // Reset variables for a clean printing
             |> List.map (fun el ->
                 let decision = workAllocation el currentWorld // To verify
                 match decision with
@@ -146,6 +143,9 @@ let main argv =
                                 TodaysHuntOption = huntingStrategy}
                 | 2 -> {el with TodaysActivity = BUILDING, 1.0}
                 | _ -> failwith("Invalid decision")
+            )
+            |> List.map (fun el ->
+               {el with Gain = 0.0; FoodShared = false; HuntedFood = 0.0}     // Reset variables that might interfere with printing or decision making
             )
             
         let builders =
