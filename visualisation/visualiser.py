@@ -10,7 +10,7 @@ from zipfile import ZipFile
 import os.path
 import os
 
-boxPlotDayLimit = 300
+energyDayThreshold = 100
 
 parser = argparse.ArgumentParser()
 
@@ -142,17 +142,17 @@ for k in range(0, numRuns):
         axes = plt.subplot(111)
 
         energy = data.filter(regex="Energy$", axis=1)
-        if len(energy) < 100:
+        if len(energy) < energyDayThreshold:
             energy.apply(lambda x: axes.scatter(x.index+1, x, c='g', marker="x"))
         energy["Average"] = data["Average Energy"]
         axes.plot(data["CurrentDay"], energy["Average"], color='blue')
         axes.set_ylim(0,100)
         ybox1 = TextArea("Energy: ", textprops=dict(color="k", rotation=90,ha='left',va='bottom'))
-        if len(energy) < 100:
+        if len(energy) < energyDayThreshold:
             ybox2 = TextArea("Individual/",     textprops=dict(color="g", rotation=90,ha='left',va='bottom'))
         ybox3 = TextArea("Average", textprops=dict(color="b", rotation=90,ha='left',va='bottom'))
 
-        if len(energy) < 100:
+        if len(energy) < energyDayThreshold:
             ybox = VPacker(children=[ybox3, ybox2, ybox1],align="bottom", pad=0, sep=2)
         else:
             ybox = VPacker(children=[ybox3, ybox1],align="bottom", pad=0, sep=2)
