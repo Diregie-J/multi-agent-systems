@@ -630,7 +630,7 @@ for k in range(0, numRuns):
             explode.pop()
 
         try:
-            sizes.append(occurences.loc["By Choice"])
+            sizes.append(occurences.loc["ByChoice"])
         except:
             labels.remove("By Choice")
             colors.remove('#99ff99')
@@ -736,7 +736,7 @@ for k in range(0, numRuns):
             explode.pop()
 
         try:
-            sizes.append(occurences.loc["Instant Runoff"])
+            sizes.append(occurences.loc["InstantRunoff"])
         except:
             labels.remove('Instant Runoff')
             colors.remove('#ffcc99')
