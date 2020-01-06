@@ -19,12 +19,20 @@ class MainWindowUiClass(Ui_MainWindow):
     def setupUi(self, mw):
         super().setupUi(mw)
 
+    def runSimulationSlot(self):
+        pass
+
     def filterPrint(self, msg):
         self.filterBrowser.append(msg)
 
     def refreshAll(self):
+        self.populateStandardComboBox()
+        self.saveCsvPushButton.setEnabled(True)
+        self.standardPlotComboBox.setEnabled(True)
+        self.selectCsvComboBox.setEnabled(True)
+        self.addToCsvSelect()
         self.addAgentPushButton.setEnabled(True)
-        self.exportAllPushButton.setEnabled(True)
+        self.saveAllPushButton.setEnabled(True)
         self.gifButton.setEnabled(True)
         self.daySpinBox.setEnabled(True)
         self.clearAgentsPushButton.setEnabled(True)
@@ -53,7 +61,16 @@ class MainWindowUiClass(Ui_MainWindow):
         self.standardPlotWidget.clear()
         self.customPlotWidget.clear()
 
-    #slots
+    def addToCsvSelect(self):
+        self.selectCsvComboBox.clear()
+        lst = []
+        for x in self.model.csvFileSelection:
+            lst.append(x[0])
+        self.selectCsvComboBox.addItems(lst)
+
+
+    ######### slots ###########
+
     def returnPressedSlot(self):
         #self.debugPrint("enter pressed in line edit")
         fileName = self.lineEdit.text()
@@ -71,13 +88,13 @@ class MainWindowUiClass(Ui_MainWindow):
             self.refreshAll()
             self.debugPrint("Invalid file specified: " + fileName)
 
-    def browseSlot(self):
+    def loadCsvSlot(self):
         #self.debugPrint("browse button pressed")
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
                         None,
-                        "QFileDialog.getOpenFileName()",
+                        "Load CSV",
                         "",
                         "CSV Files (*.csv);;All Files (*)",
                         options=options)
@@ -104,11 +121,11 @@ class MainWindowUiClass(Ui_MainWindow):
     def exportGifSlot(self):
         pass
 
-    def exportAllSlot(self):
+    def saveAllSlot(self):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None,
-                                                'QFileDialog.getSaveFileName()',
+                                                'Save Figures',
                                                 "",
                                                 "ZIP archive (*.zip);;All Files (*)",
                                                 options=options)
@@ -181,7 +198,72 @@ class MainWindowUiClass(Ui_MainWindow):
             self.filterComboBox.setEnabled(True)
             self.filterNumSpinBox.setEnabled(True)
 
-    # default plots
+
+    ############# standard plots ###############
+
+    def populateStandardPlotBox(self):
+        self.standardPlotBox.clear()
+        self.standardPlotBox.addItem("Average Energy and Agent Death")
+        self.standardPlotBox.addItem("Energy Distribution")
+        self.standardPlotBox.addItem("Idealism, Susceptibility and Egotism")
+        self.standardPlotBox.addItem("Fairness Distribution")
+        self.standardPlotBox.addItem("Average Infamy")
+        self.standardPlotBox.addItem("Infamy Distribution")
+        self.standardPlotBox.addItem("Crime Rate")
+        self.standardPlotBox.addItem("Crimes Committed")
+        self.standardPlotBox.addItem("Agent Activity")
+        self.standardPlotBox.addItem("Maximum Punishment Timeline")
+        self.standardPlotBox.addItem("Work Rule Timeline")
+        self.standardPlotBox.addItem("Food Rule Timeline")
+        self.standardPlotBox.addItem("Shelter Rule Timeline")
+        self.standardPlotBox.addItem("Voting Rule Timeline")
+        self.standardPlotBox.addItem("Maximum Punishment Distribution")
+        self.standardPlotBox.addItem("Work Rule Distribution")
+        self.standardPlotBox.addItem("Food Rule Distribution")
+        self.standardPlotBox.addItem("Shelter Rule Distribution")
+        self.standardPlotBox.addItem("Voting Rule Distribution")
+        
+
+    def standardPlotSelectSlot(self, plot):
+        plot = str(plot)
+        if plot == "Average Energy and Agent Death":
+            self.standardPlotWidget.standardEnergy(self.model.fileContent, False)
+        elif plot == "Energy Distribution":
+            self.standardPlotWidget.standardEnergyDistribution(self.model.fileContent, False)
+        elif plot == "Idealism, Susceptibility and Egotism":
+            self.standardPlotWidget.standardISE(self.model.fileContent, False)
+        elif plot == "Fairness Distribution":
+            self.standardPlotWidget.standardFairness(self.model.fileContent, False)
+        elif plot == "Average Infamy":
+            self.standardPlotWidget.standardInfamy(self.model.fileContent, False)
+        elif plot == "Infamy Distribution":
+            self.standardPlotWidget.standardInfamyDistribution(self.model.fileContent, False)
+        elif plot == "Crime Rate":
+            self.standardPlotWidget.standardCrimeRate(self.model.fileContent, False)
+        elif plot == "Crimes Committed":
+            self.standardPlotWidget.standardCrimeRaw(self.model.fileContent, False)
+        elif plot == "Agent Activity":
+            self.standardPlotWidget.standardActivity(self.model.fileContent, False)
+        elif plot == "Maximum Punishment Timeline":
+            self.standardPlotWidget.standardPunishmentRule(self.model.fileContent, False)
+        elif plot == "Work Rule Timeline":
+            self.standardPlotWidget.standardWorkRule(self.model.fileContent, False)
+        elif plot == "Food Rule Timeline":
+            self.standardPlotWidget.standardFoodRule(self.model.fileContent, False)
+        elif plot == "Shelter Rule Timeline":
+            self.standardPlotWidget.standardShelterRule(self.model.fileContent, False)
+        elif plot == "Voting Rule Timeline":
+            self.standardPlotWidget.standardVotingRule(self.model.fileContent, False)
+        elif plot == "Maximum Punishment Distribution":
+            self.standardPlotWidget.standardPunishmentRulePie(self.model.fileContent, False)
+        elif plot == "Work Rule Distribution":
+            self.standardPlotWidget.standardWorkRulePie(self.model.fileContent, False)
+        elif plot == "Food Rule Distribution":
+            self.standardPlotWidget.standardFoodRulePie(self.model.fileContent, False)
+        elif plot == "Shelter Rule Distribution":
+            self.standardPlotWidget.standardShelterRulePie(self.model.fileContent, False)
+        elif plot == "Voting Rule Distribution":
+            self.standardPlotWidget.standardVotingRulePie(self.model.fileContent, False)
 
     def defaultEnergySlot(self):
         self.standardPlotWidget.defaultEnergyPlot(self.model.fileContent, False)
@@ -216,6 +298,7 @@ class MainWindowUiClass(Ui_MainWindow):
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
+    app.setWindowIcon(QtGui.QIcon("./build/icon.png"))
     MainWindow = QtWidgets.QMainWindow()
     ui = MainWindowUiClass()
     ui.setupUi(MainWindow)

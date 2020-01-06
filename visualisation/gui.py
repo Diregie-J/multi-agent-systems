@@ -360,7 +360,7 @@ class Ui_MainWindow(QObject):
         self.retranslateUi(MainWindow)
         self.tabWidget_2.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(0)
-        self.pushButton.clicked.connect(self.browseSlot)
+        self.pushButton.clicked.connect(self.loadCsvSlot)
         self.lineEdit.returnPressed.connect(self.returnPressedSlot)
         self.addAgentPushButton.clicked.connect(self.addAgentSlot)
         self.noneRadio.clicked.connect(self.noneAverageSelected)
@@ -376,7 +376,7 @@ class Ui_MainWindow(QObject):
         self.clearFiltersPushButton.clicked.connect(self.removeAllFiltersSlot)
         self.comboBox.activated['QString'].connect(self.filterParameterSelectedSlot)
         self.colourComboBox.activated['QString'].connect(self.plotColourSlot)
-        self.exportAllPushButton.clicked.connect(self.exportAllSlot)
+        self.exportAllPushButton.clicked.connect(self.saveAllSlot)
         self.defaultHealthPushButton.clicked.connect(self.defaultEnergySlot)
         self.defaultShelterPushButton.clicked.connect(self.defaultShelterSlot)
         self.defaultFoodPushButton.clicked.connect(self.defaultFoodSlot)
@@ -392,7 +392,7 @@ class Ui_MainWindow(QObject):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "SOMAS"))
         self.label.setText(_translate("MainWindow", "File Name"))
         self.pushButton.setText(_translate("MainWindow", "Browse"))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.dumaTab), _translate("MainWindow", "Duma"))

@@ -2,6 +2,7 @@
 
 import matplotlib
 import pandas as pd
+import os
 from zipfile import ZipFile
 from matplotlib.figure import Figure
 
@@ -12,6 +13,7 @@ class Model:
         self.maxDays = "0"
         self.plotContent = ""
         self.columns = ""
+        self.csvFileSelection = []
 
     def isValid(self, fileName):
         if fileName.endswith('.csv'):
@@ -31,6 +33,7 @@ class Model:
             self.addAverageColumns()
             self.maxDays = len(self.fileContent.index)
             self.columns = self.fileContent.columns.values.tolist()
+            self.csvFileSelection.append((os.path.basename(fileName) + " (" + str(self.getMaxDays()) + " days)", fileName))
         else:
             self.fileContent = ""
             self.fileName = ""
@@ -98,6 +101,9 @@ class Model:
 
     def getColumns(self):
         return self.columns
+
+    def getMaxDays(self):
+        return self.maxDays
     
     def updateDay(self, value):
         pass

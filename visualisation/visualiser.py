@@ -760,8 +760,6 @@ for k in range(0, numRuns):
 
         noFoodAndShelter = []
         exile = []
-        increment = []
-        decrement = []
 
         watch = data.iloc[0]["CurrentMaxPunishment"]
         start = 1
@@ -771,10 +769,6 @@ for k in range(0, numRuns):
             if x != watch:
                 if watch == "Exile":
                     exile.append((start, count))
-                elif watch == "Increment":
-                    increment.append((start, count))
-                elif watch == "Decrement":
-                    decrement.append((start, count))
                 else:
                     noFoodAndShelter.append((start, count))
                 start = i+1
@@ -785,23 +779,17 @@ for k in range(0, numRuns):
         watch = data.iloc[-1]["CurrentMaxPunishment"]
         if watch == "Exile":
             exile.append((start, count))
-        elif watch == "Increment":
-            increment.append((start, count))
-        elif watch == "Decrement":
-            decrement.append((start, count))
         else:
             noFoodAndShelter.append((start, count))
         
         axes.broken_barh(noFoodAndShelter, (13,5), facecolors='#66b3ff')
-        axes.broken_barh(increment, (23,5), facecolors='#99ff99')
-        axes.broken_barh(decrement, (33,5), facecolors='#ffcc99')
-        axes.broken_barh(exile, (43,5), facecolors='#ff9999')
+        axes.broken_barh(exile, (23,5), facecolors='#ff9999')
         axes.set_xlabel("Day")
         axes.set_ylabel("Maximum Punishment")
         axes.set_title("Maximum Punishment During Simulation")
-        axes.set_ylim(5, 55)
-        axes.set_yticks([15, 25, 35, 45])
-        axes.set_yticklabels(["No Food and Shelter", "Increment", "Decrement", "Exile"])
+        axes.set_ylim(5, 35)
+        axes.set_yticks([15, 25])
+        axes.set_yticklabels(["No Food and Shelter", "Exile"])
         plt.tight_layout()
 
         fig = (plot, "punishmentRule" + str(k) + ".png")
@@ -828,7 +816,7 @@ for k in range(0, numRuns):
             explode.pop()
 
         try:
-            sizes.append(occurences.loc["No Food and Shelter"])
+            sizes.append(occurences.loc["NoFoodAndShelter"])
         except:
             labels.remove('No Food and Shelter')
             colors.remove('#66b3ff')

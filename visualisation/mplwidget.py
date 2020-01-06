@@ -26,6 +26,7 @@ class MplWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         QtWidgets.QWidget.__init__(self, parent)
         self.canvas = MplCanvas()
+        self.sampleLim = 300
         self.toolbar = NavigationToolbar(self.canvas, self)
         self.vbl = QtWidgets.QVBoxLayout()
         self.vbl.addWidget(self.canvas)
@@ -39,17 +40,17 @@ class MplWidget(QtWidgets.QWidget):
     def my_autopct(self, pct):
         return ('%.1f%%' % pct) if pct > 5 else ''
     
-    def defaultTestPlot(self, data, save):
-        self.defaultInfamyPlot(data, False)
+    def standardTest(self, data, save):
+        self.standardInfamyPlot(data, False)
 
-    def defaultInfamyBoxPlot(self, data, save):
+    def standardInfamyDistribution(self, data, save):
         self.clear()
 
         infamy = data.filter(regex="Infamy$", axis=1)
         infamy.drop(["Average Infamy"], axis=1)
         day = data["CurrentDay"]        
 
-        while len(infamy) > 300:
+        while len(infamy) > self.sampleLim:
             day = day[::2]
             infamy = infamy[::2]
 
@@ -74,7 +75,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultISEPlot(self, data, save):
+    def standardISE(self, data, save):
         self.clear()
 
         self.canvas.axes.plot(data["CurrentDay"], data["Average Egotism"], color='#66b3ff')
@@ -88,7 +89,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultCrimeRatePlot(self, data, save):
+    def standardCrimeRate(self, data, save):
         self.clear()
 
         crimes = data.filter(regex="LastCrimeDate$", axis=1)
@@ -118,7 +119,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultCrimeRawPlot(self, data, save):
+    def standardCrimeRaw(self, data, save):
         self.clear()
 
         crimes = data.filter(regex="LastCrimeDate$", axis=1)
@@ -138,7 +139,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultPunishmentRulePie(self, data, save):
+    def standardPunishmentRulePie(self, data, save):
         self.clear()
 
         labels = ['Exile', 'No Food and Shelter', 'Increment', 'Decrement']
@@ -157,7 +158,7 @@ class MplWidget(QtWidgets.QWidget):
         try:
             sizes.append(occurences.loc["No Food and Shelter"])
         except:
-            labels.remove('No Food and Shelter')
+            labels.remove('NoFoodAndShelter')
             colors.remove('#66b3ff')
             explode.pop()
 
@@ -186,7 +187,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultWorkRulePie(self, data, save):
+    def standardWorkRulePie(self, data, save):
         self.clear()
 
         labels = ['Everyone', 'Strongest', 'By Choice']
@@ -210,7 +211,7 @@ class MplWidget(QtWidgets.QWidget):
             explode.pop()
 
         try:
-            sizes.append(occurences.loc["By Choice"])
+            sizes.append(occurences.loc["ByChoice"])
         except:
             labels.remove("By Choice")
             colors.remove('#99ff99')
@@ -227,7 +228,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultVotingRulePie(self, data, save):
+    def standardVotingRulePie(self, data, save):
         self.clear()
 
         labels = ['Plurality', 'Borda', 'Approval', 'Instant Runoff']
@@ -258,7 +259,7 @@ class MplWidget(QtWidgets.QWidget):
             explode.pop()
 
         try:
-            sizes.append(occurences.loc["Instant Runoff"])
+            sizes.append(occurences.loc["InstantRunoff"])
         except:
             labels.remove('Instant Runoff')
             colors.remove('#ffcc99')
@@ -275,7 +276,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultFoodRulePie(self, data, save):
+    def standardFoodRulePie(self, data, save):
         self.clear()
 
         labels = ['Communism', 'Oligarchy', 'Meritocracy', 'Socialism']
@@ -323,7 +324,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultShelterRulePie(self, data, save):
+    def standardShelterRulePie(self, data, save):
         self.clear()
 
         labels = ['Random', 'Oligarchy', 'Meritocracy', 'Socialism']
@@ -372,7 +373,7 @@ class MplWidget(QtWidgets.QWidget):
             self.canvas.draw()
 
 
-    def defaultActivityPlot(self, data, save):
+    def standardActivity(self, data, save):
         self.clear()
 
         activity = data.filter(regex="Today'sActivity$", axis=1)
@@ -415,7 +416,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
     
-    def defaultWorkRulePlot(self, data, save):
+    def standardWorkRule(self, data, save):
         self.clear()
 
         everyone = []
@@ -464,13 +465,11 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultPunishmentRulePlot(self, data, save):
+    def standardPunishmentRule(self, data, save):
         self.clear()
 
         noFoodAndShelter = []
         exile = []
-        increment = []
-        decrement = []
 
         watch = data.iloc[0]["CurrentMaxPunishment"]
         start = 1
@@ -480,10 +479,6 @@ class MplWidget(QtWidgets.QWidget):
             if x != watch:
                 if watch == "Exile":
                     exile.append((start, count))
-                elif watch == "Increment":
-                    increment.append((start, count))
-                elif watch == "Decrement":
-                    decrement.append((start, count))
                 else:
                     noFoodAndShelter.append((start, count))
                 start = i+1
@@ -494,24 +489,18 @@ class MplWidget(QtWidgets.QWidget):
         watch = data.iloc[-1]["CurrentMaxPunishment"]
         if watch == "Exile":
             exile.append((start, count))
-        elif watch == "Increment":
-            increment.append((start, count))
-        elif watch == "Decrement":
-            decrement.append((start, count))
         else:
             noFoodAndShelter.append((start, count))
 
 
         self.canvas.axes.broken_barh(noFoodAndShelter, (13,5), facecolors='#66b3ff')
-        self.canvas.axes.broken_barh(increment, (23,5), facecolors='#99ff99')
-        self.canvas.axes.broken_barh(decrement, (33,5), facecolors='#ffcc99')
-        self.canvas.axes.broken_barh(exile, (43,5), facecolors='#ff9999')
+        self.canvas.axes.broken_barh(exile, (23,5), facecolors='#ff9999')
         self.canvas.axes.set_xlabel("Day")
         self.canvas.axes.set_ylabel("Maximum Punishment")
         self.canvas.axes.set_title("Maximum Punishment During Simulation")
-        self.canvas.axes.set_ylim(5, 55)
-        self.canvas.axes.set_yticks([15, 25, 35, 45])
-        self.canvas.axes.set_yticklabels(["No Food and Shelter", "Increment", "Decrement", "Exile"])
+        self.canvas.axes.set_ylim(5, 35)
+        self.canvas.axes.set_yticks([15, 25])
+        self.canvas.axes.set_yticklabels(["No Food and Shelter", "Exile"])
         self.canvas.fig.tight_layout()
 
         if save:
@@ -519,7 +508,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultVotingRulePlot(self, data, save):
+    def standardVotingRule(self, data, save):
         self.clear()
 
         borda = []
@@ -573,7 +562,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultFoodRulePlot(self, data, save):
+    def standardFoodRule(self, data, save):
         self.clear()
 
         communism = []
@@ -627,7 +616,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultShelterRulePlot(self, data, save):
+    def standardShelterRule(self, data, save):
         self.clear()
 
         random = []
@@ -681,7 +670,7 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultInfamyPlot(self, data, save):
+    def standardInfamy(self, data, save):
         self.clear()
         self.canvas.axes.plot(data["CurrentDay"], data["Average Infamy"], color='blue')
         self.canvas.axes.set_ylim(0,1)
@@ -695,18 +684,25 @@ class MplWidget(QtWidgets.QWidget):
             self.canvas.draw()
 
 
-    def defaultEnergyPlot(self, data, save):
+    def standardEnergy(self, data, save):
         self.clear()
+
         energy = data.filter(regex="Energy$", axis=1)
-        energy.apply(lambda x: self.canvas.axes.scatter(x.index+1, x, c='g', marker="x"))
+        shortSim = True if len(energy) < 150 else False
+        if shortSim:
+            energy.apply(lambda x: self.canvas.axes.scatter(x.index+1, x, c='g', marker="x"))
         energy["Average"] = data["Average Energy"]
         self.canvas.axes.plot(data["CurrentDay"], energy["Average"], color='blue')
         self.canvas.axes.set_ylim(0,100)
         ybox1 = TextArea("Energy: ", textprops=dict(color="k", rotation=90,ha='left',va='bottom'))
-        ybox2 = TextArea("Individual/",     textprops=dict(color="g", rotation=90,ha='left',va='bottom'))
+        if shortSim:
+            ybox2 = TextArea("Individual/",     textprops=dict(color="g", rotation=90,ha='left',va='bottom'))
         ybox3 = TextArea("Average", textprops=dict(color="b", rotation=90,ha='left',va='bottom'))
 
-        ybox = VPacker(children=[ybox3, ybox2, ybox1],align="bottom", pad=0, sep=2)
+        if shortSim:
+            ybox = VPacker(children=[ybox3, ybox2, ybox1],align="bottom", pad=0, sep=2)
+        else:
+            ybox = VPacker(children=[ybox3, ybox1],align="bottom", pad=0, sep=2)
 
         anchored_ybox = AnchoredOffsetbox(loc=8, child=ybox, pad=0., frameon=False, bbox_to_anchor=(-0.08, 0.3), 
                                   bbox_transform=self.canvas.axes.transAxes, borderpad=0.)
@@ -727,14 +723,14 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultEnergyBoxPlot(self, data, save):
+    def standardEnergyDistribution(self, data, save):
         self.clear()
         
         energy = data.filter(regex="Energy$", axis=1)
         energy.drop(["Average Energy"], axis=1)
         day = data["CurrentDay"]        
 
-        while len(energy) > 300:
+        while len(energy) > self.sampleLim:
             day = day[::2]
             energy = energy[::2]
 
@@ -759,53 +755,53 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
-    def defaultEgotismPlot(self, data, save):
-        self.clear()
-        self.canvas.axes.plot(data["CurrentDay"], data["Average Egotism"], color='blue')
-        self.canvas.axes.set_ylim(0,1)
-        self.canvas.axes.set_xlabel("Day")
-        self.canvas.axes.set_ylabel("Egotism")
-        self.canvas.axes.set_title("Average Agent Egotism")
-        
-        if save:
-            return self.canvas.fig
-        else:
-            self.canvas.draw()
+    #def standardEgotism(self, data, save):
+    #    self.clear()
+    #    self.canvas.axes.plot(data["CurrentDay"], data["Average Egotism"], color='blue')
+    #    self.canvas.axes.set_ylim(0,1)
+    #    self.canvas.axes.set_xlabel("Day")
+    #    self.canvas.axes.set_ylabel("Egotism")
+    #    self.canvas.axes.set_title("Average Agent Egotism")
+    #    
+    #    if save:
+    #        return self.canvas.fig
+    #    else:
+    #        self.canvas.draw()
+#
+    #def standardSusceptibility(self, data, save):
+    #    self.clear()
+    #    self.canvas.axes.plot(data["CurrentDay"], data["Average Susceptibility"], color='blue')
+    #    self.canvas.axes.set_ylim(0,1)
+    #    self.canvas.axes.set_xlabel("Day")
+    #    self.canvas.axes.set_ylabel("Susceptibility")
+    #    self.canvas.axes.set_title("Average Agent Susceptibility")
+#
+    #    if save:
+    #        return self.canvas.fig
+    #    else:
+    #        self.canvas.draw()
+#
+    #def standardIdealism(self, data, save):
+    #    self.clear()
+    #    self.canvas.axes.plot(data["CurrentDay"], data["Average Idealism"], color='blue')
+    #    self.canvas.axes.set_ylim(0,1)
+    #    self.canvas.axes.set_xlabel("Day")
+    #    self.canvas.axes.set_ylabel("Idealism")
+    #    self.canvas.axes.set_title("Average Agent Idealism")
+#
+    #    if save:
+    #        return self.canvas.fig
+    #    else:
+    #        self.canvas.draw()
 
-    def defaultSusceptibilityPlot(self, data, save):
-        self.clear()
-        self.canvas.axes.plot(data["CurrentDay"], data["Average Susceptibility"], color='blue')
-        self.canvas.axes.set_ylim(0,1)
-        self.canvas.axes.set_xlabel("Day")
-        self.canvas.axes.set_ylabel("Susceptibility")
-        self.canvas.axes.set_title("Average Agent Susceptibility")
-
-        if save:
-            return self.canvas.fig
-        else:
-            self.canvas.draw()
-
-    def defaultIdealismPlot(self, data, save):
-        self.clear()
-        self.canvas.axes.plot(data["CurrentDay"], data["Average Idealism"], color='blue')
-        self.canvas.axes.set_ylim(0,1)
-        self.canvas.axes.set_xlabel("Day")
-        self.canvas.axes.set_ylabel("Idealism")
-        self.canvas.axes.set_title("Average Agent Idealism")
-
-        if save:
-            return self.canvas.fig
-        else:
-            self.canvas.draw()
-
-    def defaultFairnessPlot(self, data, save):
+    def standardFairness(self, data, save):
         self.clear()
 
         fairness = data.filter(regex="Fairness$", axis=1)
         fairness.drop(["Average Fairness"], axis=1)
-        day = data["CurrentDay"]        
+        day = data["CurrentDay"]
 
-        while len(fairness) > 300:
+        while len(fairness) > self.sampleLim:
             day = day[::2]
             fairness = fairness[::2]
 
@@ -836,37 +832,37 @@ class MplWidget(QtWidgets.QWidget):
     def exportAll(self, data, fileName):
         plotNames = []
         with ZipFile(fileName, "w") as zip:
-            fig = ((self.defaultEnergyPlot(data, True), "averageEnergy.png"))
+            fig = ((self.standardEnergyPlot(data, True), "averageEnergy.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.defaultEnergyBoxPlot(data, True), "boxPlotEnergy.png"))
+            fig = ((self.standardEnergyBoxPlot(data, True), "boxPlotEnergy.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.defaultEgotismPlot(data, True), "egotism.png"))
+            fig = ((self.standardEgotismPlot(data, True), "egotism.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.defaultSusceptibilityPlot(data, True), "susceptibility.png"))
+            fig = ((self.standardSusceptibilityPlot(data, True), "susceptibility.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.defaultIdealismPlot(data, True), "idealism.png"))
+            fig = ((self.standardIdealismPlot(data, True), "idealism.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.defaultFairnessPlot(data, True), "fairness.png"))
+            fig = ((self.standardFairnessPlot(data, True), "fairness.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.defaultInfamyPlot(data, True), "infamy.png"))
+            fig = ((self.standardInfamyPlot(data, True), "infamy.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
