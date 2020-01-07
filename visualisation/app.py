@@ -19,9 +19,6 @@ class MainWindowUiClass(Ui_MainWindow):
     def setupUi(self, mw):
         super().setupUi(mw)
 
-    def runSimulationPressedSlot(self):
-        self.runSimulation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN)
-
     def runSimulation(self, runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN):
         pass
 
@@ -74,6 +71,12 @@ class MainWindowUiClass(Ui_MainWindow):
 
     ######### slots ###########
 
+    def runSimulationSlot(self):
+        self.runSimulation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN)
+
+    def agentUpdateSlot(self):
+        pass
+
     def returnPressedSlot(self):
         #self.debugPrint("enter pressed in line edit")
         fileName = self.lineEdit.text()
@@ -91,6 +94,31 @@ class MainWindowUiClass(Ui_MainWindow):
             self.refreshAll()
             self.debugPrint("Invalid file specified: " + fileName)
 
+    def loadProfileSlot(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
+                        None,
+                        "Load Profile",
+                        "",
+                        "JSON Files (*.json);;All Files (*)",
+                        options=options)
+        # do something with fileName (who knows)
+
+    def saveProfileSlot(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                                'Save Profile',
+                                                "",
+                                                "JSON Files (*.json);;All Files (*)",
+                                                options=options)
+        
+        if not fileName.endswith(".json"):
+            fileName += ".json"
+
+        #create json from profile number (script exists somewhere to generate it)
+
     def loadCsvSlot(self):
         #self.debugPrint("browse button pressed")
         options = QtWidgets.QFileDialog.Options()
@@ -104,6 +132,20 @@ class MainWindowUiClass(Ui_MainWindow):
         if fileName:
             self.model.setFileName(fileName)
             self.refreshAll()
+
+    def saveCsvSlot(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                                'Save CSV',
+                                                "",
+                                                "CSV Files (*.csv);;All Files (*)",
+                                                options=options)
+        
+        if not fileName.endswith(".csv"):
+            fileName += ".csv"
+
+        #save the csv 
             
     def dayChangedSlot(self, value):
         self.model.updateDay(value)
