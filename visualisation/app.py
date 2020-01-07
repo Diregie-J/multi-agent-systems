@@ -5,6 +5,7 @@ from PyQt5.QtCore import QObject, pyqtSlot
 from gui import Ui_MainWindow
 from zipfile import ZipFile
 import sys
+import os
 from os import remove as DeleteFile
 import pandas as pd
 import matplotlib
@@ -19,15 +20,16 @@ class MainWindowUiClass(Ui_MainWindow):
     def setupUi(self, mw):
         super().setupUi(mw)
 
-    def runSimulationPressedSlot(self):
-        self.runSimulation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN)
-
-    def runSimulation(self, runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN):
-        agent_init = f"from agent import *\n\nTotalProfiles = [(Balanced, {balanced}), (Egotist, {egotist}), (Idealist, {idealist}), (Susceptible, {susceptible}), (NotIdealist, {idealistN}), (NotEgotist, {egotistN}), (NotSusceptible, {suscpetibleN})]"
-        total_agents = balanced + idealist + egotist + susceptible + idealistN + egotistN + suscpetibleN
+    def runSimulation(self, runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN):
+        agent_init = f"from agent import *\n\nTotalProfiles = [(Balanced, {balanced}), (Egotist, {egotist}), (Idealist, {idealist}), (Susceptible, {susceptible}), (NotIdealist, {idealistN}), (NotEgotist, {egotistN}), (NotSusceptible, {susceptibleN})]"
+        total_agents = balanced + idealist + egotist + susceptible + idealistN + egotistN + susceptibleN
         cmd = f"cd ../multi-agent-systems/Agent-Config ; printf \"{agent_init}\" > total_profiles.py ; python3 agent_init.py ; cd ../bin/Debug/netcoreapp3.0/ ; ./multi-agent-systems  --number-days {days} --number-profiles 7 --number-agents {total_agents} --number-runs {runs}"
 
         os.system(cmd)
+
+    def makeAgentProfile(self, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN):
+        # make the json command bollocks happen
+        pass
 
     def filterPrint(self, msg):
         self.filterBrowser.append(msg)
@@ -75,8 +77,41 @@ class MainWindowUiClass(Ui_MainWindow):
             lst.append(x[0])
         self.selectCsvComboBox.addItems(lst)
 
+    def updateNumAgents(self):
+        balanced = self.model.getBalancedAgents()
+        idealist = self.model.getIdealistAgents()
+        egotist = self.model.getEgotistAgents()
+        susceptible = self.model.getSusceptibleAgents()
+        idealistN = self.model.getIdealistNAgents()
+        egotistN = self.model.getEgotistNAgents()
+        susceptibleN = self.model.getSusceptibleNAgents()
+        total = balanced + idealist + egotist + susceptible + idealistN + egotistN + susceptibleN
+        self.numAgentsLabel.setText(str(total))
+        if total > 0:
+            self.runSimulationPushButton.setEnabled(True)
+        else:
+            self.runSimulationPushButton.setEnabled(False)
+        self.simulationPlotWidget.agentDistribution(balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN, False)
 
     ######### slots ###########
+
+    def runSimulationSlot(self):
+        runs = self.model.getSimRuns()
+        days = self.model.getSimDays()
+        balanced = self.model.getBalancedAgents()
+        idealist = self.model.getIdealistAgents()
+        egotist = self.model.getEgotistAgents()
+        susceptible = self.model.getSusceptibleAgents()
+        idealistN = self.model.getIdealistNAgents()
+        egotistN = self.model.getEgotistNAgents()
+        susceptibleN = self.model.getSusceptibleNAgents()
+        self.runSimulation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN)
+
+    def agentUpdateSlot(self):
+        pass
+
+    def csvSelectSlot(self):
+        pass
 
     def returnPressedSlot(self):
         #self.debugPrint("enter pressed in line edit")
@@ -95,6 +130,31 @@ class MainWindowUiClass(Ui_MainWindow):
             self.refreshAll()
             self.debugPrint("Invalid file specified: " + fileName)
 
+    def loadProfileSlot(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
+                        None,
+                        "Load Profile",
+                        "",
+                        "JSON Files (*.json);;All Files (*)",
+                        options=options)
+        # do something with fileName (who knows)
+
+    def saveProfileSlot(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                                'Save Profile',
+                                                "",
+                                                "JSON Files (*.json);;All Files (*)",
+                                                options=options)
+        
+        if not fileName.endswith(".json"):
+            fileName += ".json"
+
+        #create json from profile number (script exists somewhere to generate it)
+
     def loadCsvSlot(self):
         #self.debugPrint("browse button pressed")
         options = QtWidgets.QFileDialog.Options()
@@ -108,7 +168,57 @@ class MainWindowUiClass(Ui_MainWindow):
         if fileName:
             self.model.setFileName(fileName)
             self.refreshAll()
+
+    def saveCsvSlot(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                                'Save CSV',
+                                                "",
+                                                "CSV Files (*.csv);;All Files (*)",
+                                                options=options)
+        
+        if not fileName.endswith(".csv"):
+            fileName += ".csv"
+
+        #save the csv 
             
+    ####### simulation comboBoxes ##########
+
+    def simRunUpdateSlot(self, int):
+        self.model.updateSimRuns(int)
+
+    def simDayUpdateSlot(self, int):
+        self.model.updateSimDays(int)
+
+    def balancedUpdateSlot(self, int):
+        self.model.updateBalancedAgents(int)
+        self.updateNumAgents()
+
+    def egotistUpdateSlot(self, int):
+        self.model.updateEgotistAgents(int)
+        self.updateNumAgents()
+
+    def egotistNUpdateSlot(self, int):
+        self.model.updateEgotistNAgents(int)
+        self.updateNumAgents()
+
+    def idealistUpdateSlot(self, int):
+        self.model.updateIdealistAgents(int)
+        self.updateNumAgents()
+
+    def idealistNUpdateSlot(self, int):
+        self.model.updateIdealistNAgents(int)
+        self.updateNumAgents()
+
+    def susceptibleUpdateSlot(self, int):
+        self.model.updateSusceptibleAgents(int)
+        self.updateNumAgents()
+
+    def susceptibleNUpdateSlot(self, int):
+        self.model.updateSusceptibleNAgents(int)
+        self.updateNumAgents()
+
     def dayChangedSlot(self, value):
         self.model.updateDay(value)
 

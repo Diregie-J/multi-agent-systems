@@ -39,6 +39,9 @@ class MplWidget(QtWidgets.QWidget):
 
     def my_autopct(self, pct):
         return ('%.1f%%' % pct) if pct > 5 else ''
+
+    def my_labels(self, pct, label):
+        return label if pct > 5 else ''
     
     def standardTest(self, data, save):
         self.standardInfamyPlot(data, False)
@@ -824,6 +827,73 @@ class MplWidget(QtWidgets.QWidget):
             return self.canvas.fig
         else:
             self.canvas.draw()
+
+    def agentDistribution(self, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN, save):
+        self.clear()
+
+        agents = []
+
+        labels = ['Balanced', 'Idealist', 'Egotist', 'Susceptible', 'Not Idealist', 'Not Egotist', 'Not Susceptible']
+        colors = ['indianred','orange','gold','lightgreen', 'deepskyblue', 'plum', 'mediumpurple']
+
+        if balanced == 0:
+            labels.remove('Balanced')
+            colors.remove('indianred')
+        else:
+            agents.append(balanced)
+        
+        if idealist == 0:
+            labels.remove("Idealist")
+            colors.remove("orange")
+        else:
+            agents.append(idealist)
+        
+        if egotist == 0:
+            labels.remove("Egotist")
+            colors.remove("gold")
+        else:
+            agents.append(egotist)
+
+        if susceptible == 0:
+            labels.remove("Susceptible")
+            colors.remove("lightgreen")
+        else:
+            agents.append(susceptible)
+
+        if idealistN == 0:
+            labels.remove("Not Idealist")
+            colors.remove("deepskyblue")
+        else:
+            agents.append(idealistN)
+
+        if egotistN == 0:
+            labels.remove("Not Egotist")
+            colors.remove("plum")
+        else:
+            agents.append(egotistN)
+
+        if susceptibleN == 0:
+            labels.remove("Not Susceptible")
+            colors.remove("mediumpurple")
+        else:
+            agents.append(susceptibleN)
+
+        if len(colors) == 0:
+            return
+
+        explode = [0.05]*len(colors)
+
+        self.canvas.axes.pie(agents, colors = colors, labels=labels, autopct=self.my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        self.canvas.axes.add_patch(centre_circle)
+        self.canvas.axes.axis('equal')
+        self.canvas.axes.set_title('Agent Profiles')
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
 
     def clear(self):
         self.canvas.fig.clear(keep_observers=True)

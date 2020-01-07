@@ -14,6 +14,15 @@ class Model:
         self.plotContent = ""
         self.columns = ""
         self.csvFileSelection = []
+        self.simRuns = 1
+        self.simDays = -1
+        self.balancedAgents = 0
+        self.egotistAgents = 0
+        self.egotistNAgents = 0
+        self.idealistAgents = 0
+        self.idealistNAgents = 0
+        self.susceptibleAgents = 0
+        self.susceptibleNAgents = 0
 
     def isValid(self, fileName):
         if fileName.endswith('.csv'):
@@ -104,6 +113,60 @@ class Model:
 
     def getMaxDays(self):
         return self.maxDays
+
+    def getSimRuns(self):
+        return self.simRuns
+
+    def getSimDays(self):
+        return self.simDays
+
+    def getBalancedAgents(self):
+        return self.balancedAgents
+
+    def getEgotistAgents(self):
+        return self.egotistAgents
+
+    def getEgotistNAgents(self):
+        return self.egotistNAgents
+
+    def getIdealistAgents(self):
+        return self.idealistAgents
     
+    def getIdealistNAgents(self):
+        return self.idealistNAgents
+
+    def getSusceptibleAgents(self):
+        return self.susceptibleAgents
+
+    def getSusceptibleNAgents(self):
+        return self.susceptibleNAgents
+    
+    def updateSimRuns(self, value):
+        self.simRuns = value
+
+    def updateSimDays(self, value):
+        self.simDays = value
+
+    def updateBalancedAgents(self, value):
+        self.balancedAgents = value
+
+    def updateEgotistAgents(self, value):
+        self.egotistAgents = value
+
+    def updateEgotistNAgents(self, value):
+        self.egotistNAgents = value
+
+    def updateIdealistAgents(self, value):
+        self.idealistAgents = value
+    
+    def updateIdealistNAgents(self, value):
+        self.idealistNAgents = value
+
+    def updateSusceptibleAgents(self, value):
+        self.susceptibleAgents = value
+
+    def updateSusceptibleNAgents(self, value):
+        self.susceptibleNAgents = value
+
     def updateDay(self, value):
         pass
