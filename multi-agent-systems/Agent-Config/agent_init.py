@@ -3,10 +3,10 @@ import os
 import shutil
 from agent import *
 import random
+from total_profiles import TotalProfiles
 #import np
 
-TotalProfiles = [(Balanced, 12), (Egotist, 2), (Idealist, 2), (Susceptible, 2),
-                 (NotIdealist, 2), (NotEgotist, 2), (NotSusceptible, 2)]
+
 TotalNumAgent = sum([i[1] for i in TotalProfiles])
 
 # Reset agent definition directory
