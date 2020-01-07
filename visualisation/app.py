@@ -20,9 +20,9 @@ class MainWindowUiClass(Ui_MainWindow):
         super().setupUi(mw)
 
     def runSimulationPressedSlot(self):
-            runSimulalation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN)
+        self.runSimulation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN)
 
-    def runSimulalation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN):
+    def runSimulation(self, runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN):
         pass
 
     def filterPrint(self, msg):
