@@ -11,6 +11,7 @@ import pandas as pd
 import matplotlib
 from matplotlib.figure import Figure
 from model import Model
+from shutil import copyfileobj
 
 class MainWindowUiClass(Ui_MainWindow):
     def __init__(self):
@@ -27,7 +28,7 @@ class MainWindowUiClass(Ui_MainWindow):
 
         os.system(cmd)
 
-    def makeAgentProfile(self, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN):
+    def makeAgentProfiles(self, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN):
         # make the json command bollocks happen
         pass
 
@@ -35,7 +36,7 @@ class MainWindowUiClass(Ui_MainWindow):
         self.filterBrowser.append(msg)
 
     def refreshAll(self):
-        self.populateStandardComboBox()
+        self.populateStandardPlotComboBox()
         self.saveCsvPushButton.setEnabled(True)
         self.standardPlotComboBox.setEnabled(True)
         self.selectCsvComboBox.setEnabled(True)
@@ -106,18 +107,25 @@ class MainWindowUiClass(Ui_MainWindow):
         egotistN = self.model.getEgotistNAgents()
         susceptibleN = self.model.getSusceptibleNAgents()
         self.runSimulation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN)
+        self.model.clearLastSimulation()
+        self.model.addCurrentSimulation(runs)
+        self.addToCsvSelect()
+        self.selectCsvComboBox.setEnabled(True)
 
     def agentUpdateSlot(self):
         pass
 
-    def csvSelectSlot(self):
-        pass
+    def csvSelectSlot(self, index):
+        fileName = self.model.getCsvPath(index)
+        self.model.setFileName(fileName, False)
+        self.refreshAll()
+        self.selectCsvComboBox.setCurrentIndex(index)
 
     def returnPressedSlot(self):
         #self.debugPrint("enter pressed in line edit")
         fileName = self.lineEdit.text()
-        if self.model.setFileName(fileName):
-            self.model.setFileName(fileName)
+        if self.model.setFileName(fileName, True):
+            self.model.setFileName(fileName, True)
             self.refreshAll()
         else:
             m = QtWidgets.QMessageBox()
@@ -153,7 +161,17 @@ class MainWindowUiClass(Ui_MainWindow):
         if not fileName.endswith(".json"):
             fileName += ".json"
 
-        #create json from profile number (script exists somewhere to generate it)
+        balanced = self.model.getBalancedAgents()
+        idealist = self.model.getIdealistAgents()
+        egotist = self.model.getEgotistAgents()
+        susceptible = self.model.getSusceptibleAgents()
+        idealistN = self.model.getIdealistNAgents()
+        egotistN = self.model.getEgotistNAgents()
+        susceptibleN = self.model.getSusceptibleNAgents()
+        self.makeAgentProfiles(balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN)
+        #agentFile = os.path.join()
+        #with open(fileName, 'w+') as output, open('file.txt', 'r') as input:
+        #    copyfileobj(input, output)
 
     def loadCsvSlot(self):
         #self.debugPrint("browse button pressed")
@@ -166,22 +184,24 @@ class MainWindowUiClass(Ui_MainWindow):
                         "CSV Files (*.csv);;All Files (*)",
                         options=options)
         if fileName:
-            self.model.setFileName(fileName)
+            self.model.setFileName(fileName, True)
             self.refreshAll()
 
     def saveCsvSlot(self):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+        saveFile, _ = QtWidgets.QFileDialog.getSaveFileName(None,
                                                 'Save CSV',
                                                 "",
                                                 "CSV Files (*.csv);;All Files (*)",
                                                 options=options)
         
-        if not fileName.endswith(".csv"):
-            fileName += ".csv"
+        if not saveFile.endswith(".csv"):
+            saveFile += ".csv"
 
-        #save the csv 
+        
+        with open(saveFile, 'w+') as output, open(self.model.fileName, 'r') as input:
+            copyfileobj(input, output)
             
     ####### simulation comboBoxes ##########
 
@@ -318,27 +338,27 @@ class MainWindowUiClass(Ui_MainWindow):
 
     ############# standard plots ###############
 
-    def populateStandardPlotBox(self):
-        self.standardPlotBox.clear()
-        self.standardPlotBox.addItem("Average Energy and Agent Death")
-        self.standardPlotBox.addItem("Energy Distribution")
-        self.standardPlotBox.addItem("Idealism, Susceptibility and Egotism")
-        self.standardPlotBox.addItem("Fairness Distribution")
-        self.standardPlotBox.addItem("Average Infamy")
-        self.standardPlotBox.addItem("Infamy Distribution")
-        self.standardPlotBox.addItem("Crime Rate")
-        self.standardPlotBox.addItem("Crimes Committed")
-        self.standardPlotBox.addItem("Agent Activity")
-        self.standardPlotBox.addItem("Maximum Punishment Timeline")
-        self.standardPlotBox.addItem("Work Rule Timeline")
-        self.standardPlotBox.addItem("Food Rule Timeline")
-        self.standardPlotBox.addItem("Shelter Rule Timeline")
-        self.standardPlotBox.addItem("Voting Rule Timeline")
-        self.standardPlotBox.addItem("Maximum Punishment Distribution")
-        self.standardPlotBox.addItem("Work Rule Distribution")
-        self.standardPlotBox.addItem("Food Rule Distribution")
-        self.standardPlotBox.addItem("Shelter Rule Distribution")
-        self.standardPlotBox.addItem("Voting Rule Distribution")
+    def populateStandardPlotComboBox(self):
+        self.standardPlotComboBox.clear()
+        self.standardPlotComboBox.addItem("Average Energy and Agent Death")
+        self.standardPlotComboBox.addItem("Energy Distribution")
+        self.standardPlotComboBox.addItem("Idealism, Susceptibility and Egotism")
+        self.standardPlotComboBox.addItem("Fairness Distribution")
+        self.standardPlotComboBox.addItem("Average Infamy")
+        self.standardPlotComboBox.addItem("Infamy Distribution")
+        self.standardPlotComboBox.addItem("Crime Rate")
+        self.standardPlotComboBox.addItem("Crimes Committed")
+        self.standardPlotComboBox.addItem("Agent Activity")
+        self.standardPlotComboBox.addItem("Maximum Punishment Timeline")
+        self.standardPlotComboBox.addItem("Work Rule Timeline")
+        self.standardPlotComboBox.addItem("Food Rule Timeline")
+        self.standardPlotComboBox.addItem("Shelter Rule Timeline")
+        self.standardPlotComboBox.addItem("Voting Rule Timeline")
+        self.standardPlotComboBox.addItem("Maximum Punishment Distribution")
+        self.standardPlotComboBox.addItem("Work Rule Distribution")
+        self.standardPlotComboBox.addItem("Food Rule Distribution")
+        self.standardPlotComboBox.addItem("Shelter Rule Distribution")
+        self.standardPlotComboBox.addItem("Voting Rule Distribution")
         
 
     def standardPlotSelectSlot(self, plot):

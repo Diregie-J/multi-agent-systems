@@ -35,18 +35,41 @@ class Model:
         else:
             return False
 
-    def setFileName(self, fileName):
+    def numDays(self, log):
+        with open(log) as f:
+            i = -1
+            for i, l in enumerate(f):
+                pass
+        return i
+
+    def setFileName(self, fileName, new):
         if self.isValid(fileName):
             self.fileName = fileName
             self.fileContent = pd.read_csv(fileName)
             self.addAverageColumns()
             self.maxDays = len(self.fileContent.index)
             self.columns = self.fileContent.columns.values.tolist()
-            self.csvFileSelection.append((os.path.basename(fileName) + " (" + str(self.getMaxDays()) + " days)", fileName))
+            if new:
+                self.csvFileSelection.append((os.path.basename(fileName) + " (" + str(self.getMaxDays()) + " days)", fileName))
         else:
             self.fileContent = ""
             self.fileName = ""
             self.plotContent = ""
+
+    def addCurrentSimulation(self, runs):
+        for x in range(runs):
+            fileName = os.path.join("..", "csv", "test" + str(x) + ".csv")
+            self.csvFileSelection.append(("Run " + str(x) + " (" + str(self.numDays(fileName)) + " days)", fileName))
+
+    def clearLastSimulation(self):
+        removals = []
+        for x in self.csvFileSelection:
+            if x[1].startswith(os.path.join("..", "csv", "")):
+                if os.path.basename(x[1]).startswith("test"):
+                    removals.append(x)
+        
+        for y in removals:
+            self.csvFileSelection.remove(y)
 
     def addAverageColumns(self):
         #energy average
@@ -107,6 +130,9 @@ class Model:
 
     def getPlotContents(self):
         return self.plotContent
+
+    def getCsvPath(self, index):
+        return self.csvFileSelection[index][1]
 
     def getColumns(self):
         return self.columns

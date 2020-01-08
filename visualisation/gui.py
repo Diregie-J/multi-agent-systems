@@ -535,7 +535,7 @@ class Ui_MainWindow(QObject):
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget_2.setCurrentIndex(1)
+        self.tabWidget_2.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
         self.loadCsvPushButton.clicked.connect(self.loadCsvSlot)
         self.lineEdit.returnPressed.connect(self.returnPressedSlot)
