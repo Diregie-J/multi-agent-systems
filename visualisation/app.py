@@ -188,6 +188,8 @@ class MainWindowUiClass(Ui_MainWindow):
             self.egotistNSpinBox.setValue(egotistN)
             self.susceptibleNSpinBox.setValue(susceptibleN)
 
+        self.updateNumAgents()
+
 
     def saveProfileSlot(self):
         options = QtWidgets.QFileDialog.Options()
