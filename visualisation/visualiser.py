@@ -469,9 +469,9 @@ for k in range(0, numRuns):
                 elif watch == "Socialism":
                     socialism.append((start, count))
                 elif watch == "Oligarchy":
-                    meritocracy.append((start, count))
-                else:
                     oligarchy.append((start, count))
+                else:
+                    meritocracy.append((start, count))
                 start = i+1
                 count = 0
                 watch = x
@@ -483,9 +483,9 @@ for k in range(0, numRuns):
         elif watch == "Socialism":
             socialism.append((start, count))
         elif watch == "Oligarchy":
-            meritocracy.append((start, count))
-        else:
             oligarchy.append((start, count))
+        else:
+            meritocracy.append((start, count))
 
         axes.broken_barh(socialism, (13,5), facecolors='#66b3ff')
         axes.broken_barh(meritocracy, (23,5), facecolors='#99ff99')
