@@ -90,13 +90,16 @@ class MainWindowUiClass(Ui_MainWindow):
         self.numAgentsLabel.setText(str(total))
         if total > 0:
             self.runSimulationPushButton.setEnabled(True)
+            self.simStatusLabel.setText("Ready!")
         else:
             self.runSimulationPushButton.setEnabled(False)
+            self.simStatusLabel.setText("Waiting")
         self.simulationPlotWidget.agentDistribution(balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN, False)
 
     ######### slots ###########
 
     def runSimulationSlot(self):
+
         runs = self.model.getSimRuns()
         days = self.model.getSimDays()
         balanced = self.model.getBalancedAgents()
@@ -106,9 +109,11 @@ class MainWindowUiClass(Ui_MainWindow):
         idealistN = self.model.getIdealistNAgents()
         egotistN = self.model.getEgotistNAgents()
         susceptibleN = self.model.getSusceptibleNAgents()
+
         self.runSimulation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN)
         self.model.clearLastSimulation()
         self.model.addCurrentSimulation(runs)
+        self.simStatusLabel.setText("Done!")
         self.addToCsvSelect()
         self.selectCsvComboBox.setEnabled(True)
 
@@ -143,24 +148,58 @@ class MainWindowUiClass(Ui_MainWindow):
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
                         None,
-                        "Load Profile",
+                        "Load Agent Setup",
                         "",
-                        "JSON Files (*.json);;All Files (*)",
+                        "Setup Files (*.setup);;All Files (*)",
                         options=options)
-        # do something with fileName (who knows)
+        
+        with open(fileName, "r") as f:
+            contents = f.readlines()
+            runs = int(contents[0])
+            days = int(contents[1])
+            balanced = int(contents[2])
+            idealist = int(contents[3])
+            egotist = int(contents[4])
+            susceptible = int(contents[5])
+            idealistN = int(contents[6])
+            egotistN = int(contents[7])
+            susceptibleN = int(contents[8])
+
+            self.model.updateSimRuns(runs)
+            self.model.updateSimDays(days)
+            self.model.updateBalancedAgents(balanced)
+            self.model.updateIdealistAgents(idealist)
+            self.model.updateEgotistAgents(egotist)
+            self.model.updateSusceptibleAgents(susceptible)
+            self.model.updateIdealistNAgents(idealistN)
+            self.model.updateEgotistNAgents(egotistN)
+            self.model.updateSusceptibleNAgents(susceptibleN)
+
+            self.runSpinBox.setValue(runs)
+            self.daySpinBox.setValue(days)
+            self.balancedSpinBox.setValue(balanced)
+            self.idealistSpinBox.setValue(idealist)
+            self.egotistSpinBox.setValue(egotist)
+            self.susceptibleSpinBox.setValue(susceptible)
+            self.idealistNSpinBox.setValue(idealistN)
+            self.egotistNSpinBox.setValue(egotistN)
+            self.susceptibleNSpinBox.setValue(susceptibleN)
+
 
     def saveProfileSlot(self):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None,
-                                                'Save Profile',
+                                                'Save Agent Setup',
                                                 "",
-                                                "JSON Files (*.json);;All Files (*)",
+                                                "Setup Files (*.setup);;All Files (*)",
                                                 options=options)
         
-        if not fileName.endswith(".json"):
-            fileName += ".json"
+        if not fileName.endswith(".setup"):
+            fileName += ".setup"
 
+        runs = self.model.getSimRuns()
+        days = self.model.getSimDays()
         balanced = self.model.getBalancedAgents()
         idealist = self.model.getIdealistAgents()
         egotist = self.model.getEgotistAgents()
@@ -168,10 +207,18 @@ class MainWindowUiClass(Ui_MainWindow):
         idealistN = self.model.getIdealistNAgents()
         egotistN = self.model.getEgotistNAgents()
         susceptibleN = self.model.getSusceptibleNAgents()
-        self.makeAgentProfiles(balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN)
-        #agentFile = os.path.join()
-        #with open(fileName, 'w+') as output, open('file.txt', 'r') as input:
-        #    copyfileobj(input, output)
+        
+        with open(fileName, "w+") as f:
+            f.write(str(runs) + "\n")
+            f.write(str(days) + "\n")
+            f.write(str(balanced) + "\n")
+            f.write(str(idealist) + "\n")
+            f.write(str(egotist) + "\n")
+            f.write(str(susceptible) + "\n")
+            f.write(str(idealistN) + "\n")
+            f.write(str(egotistN) + "\n")
+            f.write(str(susceptibleN) + "\n")
+            
 
     def loadCsvSlot(self):
         #self.debugPrint("browse button pressed")

@@ -159,9 +159,9 @@ class MplWidget(QtWidgets.QWidget):
             explode.pop()
 
         try:
-            sizes.append(occurences.loc["No Food and Shelter"])
+            sizes.append(occurences.loc["NoFoodAndShelter"])
         except:
-            labels.remove('NoFoodAndShelter')
+            labels.remove('No Food and Shelter')
             colors.remove('#66b3ff')
             explode.pop()
 
@@ -902,37 +902,92 @@ class MplWidget(QtWidgets.QWidget):
     def exportAll(self, data, fileName):
         plotNames = []
         with ZipFile(fileName, "w") as zip:
-            fig = ((self.standardEnergyPlot(data, True), "averageEnergy.png"))
+            fig = ((self.standardEnergy(data, True), "averageEnergy.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardEnergyBoxPlot(data, True), "boxPlotEnergy.png"))
+            fig = ((self.standardEnergyDistribution(data, True), "energyDistribution.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardEgotismPlot(data, True), "egotism.png"))
+            fig = ((self.standardISE(data, True), "ISE.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardSusceptibilityPlot(data, True), "susceptibility.png"))
+            fig = ((self.standardFairness(data, True), "fairness.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardIdealismPlot(data, True), "idealism.png"))
+            fig = ((self.standardInfamy(data, True), "infamy.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardFairnessPlot(data, True), "fairness.png"))
+            fig = ((self.standardCrimeRate(data, True), "crimeRate.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardInfamyPlot(data, True), "infamy.png"))
+            fig = ((self.standardCrimeRaw(data, True), "crimeRaw.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardPunishmentRulePie(data, True), "punishmentRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardWorkRulePie(data, True), "workRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardVotingRulePie(data, True), "votingRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardFoodRulePie(data, True), "foodRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardShelterRulePie(data, True), "shelterRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardPunishmentRule(data, True), "punishmentRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardWorkRule(data, True), "workRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardVotingRule(data, True), "votingRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardFoodRule(data, True), "foodRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardShelterRule(data, True), "shelterRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardActivity(data, True), "activity.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
