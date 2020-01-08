@@ -73,6 +73,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.set_ylabel('Infamy')
         self.canvas.axes.set_ylim(0)
 
+        self.canvas.fig.tight_layout()
+
         if save:
             return self.canvas.fig
         else:
@@ -86,6 +88,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.plot(data["CurrentDay"], data["Average Susceptibility"], color='#ff9999')
         self.canvas.axes.set_xlabel("Day")
         self.canvas.axes.legend()
+
+        self.canvas.fig.tight_layout()
 
         if save:
             return self.canvas.fig
@@ -117,6 +121,8 @@ class MplWidget(QtWidgets.QWidget):
         deadAxes.set_ylabel("Number of Dead Agents", color='#ff9999')
         deadAxes.set_ylim(0)
 
+        self.canvas.fig.tight_layout()
+
         if save:
             return self.canvas.fig
         else:
@@ -136,6 +142,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.set_xlabel("Day")
         self.canvas.axes.set_ylabel("Crimes Committed")
         self.canvas.axes.set_title("Crimes Committed per Day")
+
+        self.canvas.fig.tight_layout()
 
         if save:
             return self.canvas.fig
@@ -185,6 +193,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.axis('equal')
         self.canvas.axes.set_title('Maximum Punishment Proportions')
 
+        #self.canvas.fig.tight_layout()
+
         if save:
             return self.canvas.fig
         else:
@@ -225,6 +235,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.add_patch(centre_circle)
         self.canvas.axes.axis('equal')
         self.canvas.axes.set_title('Work Rule Proportions')
+
+        #self.canvas.fig.tight_layout()
 
         if save:
             return self.canvas.fig
@@ -274,6 +286,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.axis('equal')
         self.canvas.axes.set_title('Voting Rule Proportions')
 
+        #self.canvas.fig.tight_layout()
+
         if save:
             return self.canvas.fig
         else:
@@ -322,6 +336,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.axis('equal')
         self.canvas.axes.set_title('Food Rule Proportions')
 
+        #self.canvas.fig.tight_layout()
+
         if save:
             return self.canvas.fig
         else:
@@ -368,7 +384,9 @@ class MplWidget(QtWidgets.QWidget):
         centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
         self.canvas.axes.add_patch(centre_circle)
         self.canvas.axes.axis('equal')
-        self.canvas.axes.set_title('Shelter Rule Proportions')  
+        self.canvas.axes.set_title('Shelter Rule Proportions')
+
+        #self.canvas.fig.tight_layout()
 
         if save:
             return self.canvas.fig
@@ -413,6 +431,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.set_xlabel("Day")
         self.canvas.axes.set_title("Agent Activity Breakdown per Day")
         self.canvas.axes.legend((noneBar[0], huntingBar[0], buildingBar[0]), ("None", "Hunting", "Building"))
+
+        self.canvas.fig.tight_layout()
 
         if save:
             return self.canvas.fig
@@ -681,6 +701,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.set_ylabel("Infamy")
         self.canvas.axes.set_title("Average Agent Infamy")
 
+        self.canvas.fig.tight_layout()
+
         if save:
             return self.canvas.fig
         else:
@@ -720,6 +742,8 @@ class MplWidget(QtWidgets.QWidget):
         deadAxes.set_ylabel("Number of Dead Agents", color='red')
         deadAxes.set_ylim(0)
 
+        self.canvas.fig.tight_layout()
+
         if save:
             fig = self.canvas.fig
             return fig
@@ -752,6 +776,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.set_xlabel('Day')
         self.canvas.axes.set_ylabel('Energy')
         self.canvas.axes.set_ylim(0, 100)
+
+        self.canvas.fig.tight_layout()
 
         if save:
             return self.canvas.fig
@@ -823,6 +849,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.set_xlabel('Day')
         self.canvas.axes.set_ylabel('Fairness')
 
+        self.canvas.fig.tight_layout()
+
         if save:
             return self.canvas.fig
         else:
@@ -888,6 +916,8 @@ class MplWidget(QtWidgets.QWidget):
         self.canvas.axes.add_patch(centre_circle)
         self.canvas.axes.axis('equal')
         self.canvas.axes.set_title('Agent Profiles')
+
+        #self.canvas.fig.tight_layout()
 
         if save:
             return self.canvas.fig
