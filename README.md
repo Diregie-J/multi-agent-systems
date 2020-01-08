@@ -3,20 +3,21 @@ This is the repo for the Self Organising Multi-Agent Systems Assessed Project
 
 # Pre-requitisits
 
-## dontnet for Ubuntu 18.04
-wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb #.Net Stuff part 1
-sudo dpkg -i packages-microsoft-prod.deb #.Net Stuff part 2
-sudo apt-get install dotnet-sdk-3.1 -y #.Net Stuff part 3
-sudo apt install fsharp -y # F# Stuff
+## dontnet for Ubuntu 18.04 (example, does not need to be this distro or this version)
 
-## Stuff needed for visualisations
+      wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+      sudo dpkg -i packages-microsoft-prod.deb 
+      sudo apt-get install dotnet-sdk-3.1 -y
+      sudo apt install fsharp -y 
 
-pip3 install pandas
-pip3 install numpy
-pip3 install matplotlib
+## Dependencies for visualisations
 
-### Needed for GUI to work
-pip3 install PyQt5
+      pip3 install pandas
+      pip3 install numpy
+      pip3 install matplotlib
+
+### Dependency for GUI
+      pip3 install PyQt5
 
 # Method 1 (non-GUI)
 
