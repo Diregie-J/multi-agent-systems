@@ -39,6 +39,9 @@ class MplWidget(QtWidgets.QWidget):
 
     def my_autopct(self, pct):
         return ('%.1f%%' % pct) if pct > 5 else ''
+
+    def my_labels(self, pct, label):
+        return label if pct > 5 else ''
     
     def standardTest(self, data, save):
         self.standardInfamyPlot(data, False)
@@ -156,9 +159,9 @@ class MplWidget(QtWidgets.QWidget):
             explode.pop()
 
         try:
-            sizes.append(occurences.loc["No Food and Shelter"])
+            sizes.append(occurences.loc["NoFoodAndShelter"])
         except:
-            labels.remove('NoFoodAndShelter')
+            labels.remove('No Food and Shelter')
             colors.remove('#66b3ff')
             explode.pop()
 
@@ -825,6 +828,73 @@ class MplWidget(QtWidgets.QWidget):
         else:
             self.canvas.draw()
 
+    def agentDistribution(self, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN, save):
+        self.clear()
+
+        agents = []
+
+        labels = ['Balanced', 'Idealist', 'Egotist', 'Susceptible', 'Not Idealist', 'Not Egotist', 'Not Susceptible']
+        colors = ['indianred','orange','gold','lightgreen', 'deepskyblue', 'plum', 'mediumpurple']
+
+        if balanced == 0:
+            labels.remove('Balanced')
+            colors.remove('indianred')
+        else:
+            agents.append(balanced)
+        
+        if idealist == 0:
+            labels.remove("Idealist")
+            colors.remove("orange")
+        else:
+            agents.append(idealist)
+        
+        if egotist == 0:
+            labels.remove("Egotist")
+            colors.remove("gold")
+        else:
+            agents.append(egotist)
+
+        if susceptible == 0:
+            labels.remove("Susceptible")
+            colors.remove("lightgreen")
+        else:
+            agents.append(susceptible)
+
+        if idealistN == 0:
+            labels.remove("Not Idealist")
+            colors.remove("deepskyblue")
+        else:
+            agents.append(idealistN)
+
+        if egotistN == 0:
+            labels.remove("Not Egotist")
+            colors.remove("plum")
+        else:
+            agents.append(egotistN)
+
+        if susceptibleN == 0:
+            labels.remove("Not Susceptible")
+            colors.remove("mediumpurple")
+        else:
+            agents.append(susceptibleN)
+
+        if len(colors) == 0:
+            return
+
+        explode = [0.05]*len(colors)
+
+        self.canvas.axes.pie(agents, colors = colors, labels=labels, autopct=self.my_autopct, startangle=90, pctdistance=0.85, explode = explode)
+        centre_circle = matplotlib.patches.Circle((0,0),0.70,fc='white')
+        self.canvas.axes.add_patch(centre_circle)
+        self.canvas.axes.axis('equal')
+        self.canvas.axes.set_title('Agent Profiles')
+
+        if save:
+            return self.canvas.fig
+        else:
+            self.canvas.draw()
+
+
     def clear(self):
         self.canvas.fig.clear(keep_observers=True)
         self.canvas.axes = self.canvas.fig.add_subplot(111)
@@ -832,37 +902,92 @@ class MplWidget(QtWidgets.QWidget):
     def exportAll(self, data, fileName):
         plotNames = []
         with ZipFile(fileName, "w") as zip:
-            fig = ((self.standardEnergyPlot(data, True), "averageEnergy.png"))
+            fig = ((self.standardEnergy(data, True), "averageEnergy.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardEnergyBoxPlot(data, True), "boxPlotEnergy.png"))
+            fig = ((self.standardEnergyDistribution(data, True), "energyDistribution.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardEgotismPlot(data, True), "egotism.png"))
+            fig = ((self.standardISE(data, True), "ISE.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardSusceptibilityPlot(data, True), "susceptibility.png"))
+            fig = ((self.standardFairness(data, True), "fairness.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardIdealismPlot(data, True), "idealism.png"))
+            fig = ((self.standardInfamy(data, True), "infamy.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardFairnessPlot(data, True), "fairness.png"))
+            fig = ((self.standardCrimeRate(data, True), "crimeRate.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])
 
-            fig = ((self.standardInfamyPlot(data, True), "infamy.png"))
+            fig = ((self.standardCrimeRaw(data, True), "crimeRaw.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardPunishmentRulePie(data, True), "punishmentRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardWorkRulePie(data, True), "workRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardVotingRulePie(data, True), "votingRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardFoodRulePie(data, True), "foodRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardShelterRulePie(data, True), "shelterRulePie.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardPunishmentRule(data, True), "punishmentRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardWorkRule(data, True), "workRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardVotingRule(data, True), "votingRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardFoodRule(data, True), "foodRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardShelterRule(data, True), "shelterRule.png"))
+            fig[0].savefig(fig[1])
+            zip.write(fig[1])
+            plotNames.append(fig[1])
+
+            fig = ((self.standardActivity(data, True), "activity.png"))
             fig[0].savefig(fig[1])
             zip.write(fig[1])
             plotNames.append(fig[1])

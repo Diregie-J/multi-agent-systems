@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>SOMAS</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -62,9 +62,9 @@
            <widget class="QLineEdit" name="lineEdit"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="loadCsvPushButton">
             <property name="text">
-             <string>Browse</string>
+             <string>Load CSV...</string>
             </property>
            </widget>
           </item>
@@ -74,12 +74,394 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_2">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
-         <widget class="QWidget" name="dumaTab">
+         <widget class="QWidget" name="simulationTab">
           <attribute name="title">
-           <string>Duma</string>
+           <string>Simulation</string>
           </attribute>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QFrame" name="frame_8">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_16">
+              <item>
+               <widget class="QFrame" name="frame_13">
+                <property name="maximumSize">
+                 <size>
+                  <width>300</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_16">
+                 <item>
+                  <widget class="QFrame" name="frame_14">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_7">
+                    <item>
+                     <widget class="QLabel" name="label_17">
+                      <property name="text">
+                       <string>Simulation Runs</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="runSpinBox">
+                      <property name="minimum">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>1000000000</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_22">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_15">
+                    <item>
+                     <widget class="QLabel" name="label_25">
+                      <property name="text">
+                       <string>Day Limit
+(-1 for until
+agents are dead)</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="daySpinBox">
+                      <property name="minimum">
+                       <number>-1</number>
+                      </property>
+                      <property name="maximum">
+                       <number>1000000000</number>
+                      </property>
+                      <property name="value">
+                       <number>-1</number>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_21">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_14">
+                    <item>
+                     <widget class="QLabel" name="label_24">
+                      <property name="text">
+                       <string>Balanced</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="balancedSpinBox"/>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_16">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_9">
+                    <item>
+                     <widget class="QLabel" name="label_19">
+                      <property name="text">
+                       <string>Idealist</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="idealistSpinBox"/>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_19">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_12">
+                    <item>
+                     <widget class="QLabel" name="label_22">
+                      <property name="text">
+                       <string>Egotist</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="egotistSpinBox"/>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_18">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_11">
+                    <item>
+                     <widget class="QLabel" name="label_21">
+                      <property name="text">
+                       <string>Susceptible</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="susceptibleSpinBox"/>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_20">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_13">
+                    <item>
+                     <widget class="QLabel" name="label_23">
+                      <property name="text">
+                       <string>Not Idealist</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="idealistNSpinBox"/>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_17">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_10">
+                    <item>
+                     <widget class="QLabel" name="label_20">
+                      <property name="text">
+                       <string>Not Egotist</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="egotistNSpinBox"/>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_15">
+                   <property name="frameShape">
+                    <enum>QFrame::StyledPanel</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QHBoxLayout" name="horizontalLayout_8">
+                    <item>
+                     <widget class="QLabel" name="label_18">
+                      <property name="text">
+                       <string>Not Susceptible</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QSpinBox" name="susceptibleNSpinBox"/>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_23">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_17">
+                 <item>
+                  <widget class="QLabel" name="label_16">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>70</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Number of Agents</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="numAgentsLabel">
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>50</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <pointsize>30</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>0</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="MplWidget" name="simulationPlotWidget" native="true"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_12">
+             <property name="maximumSize">
+              <size>
+               <width>200</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_7">
+              <item>
+               <widget class="QPushButton" name="loadProfilePushButton">
+                <property name="text">
+                 <string>Load Profile...</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="saveProfilePushButton">
+                <property name="text">
+                 <string>Save Profile...</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="runSimulationPushButton">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>200</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>20</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>Run
+Simulation</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
          </widget>
          <widget class="QWidget" name="standardPlotsTab">
           <attribute name="title">
@@ -111,79 +493,36 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_15">
               <item>
-               <widget class="QPushButton" name="defaultHealthPushButton">
-                <property name="text">
-                 <string>Average Health</string>
+               <widget class="QComboBox" name="selectCsvComboBox">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="defaultShelterPushButton">
-                <property name="text">
-                 <string>Average Shelter</string>
+               <widget class="QComboBox" name="standardPlotComboBox">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="defaultFoodPushButton">
+               <widget class="QPushButton" name="saveCsvPushButton">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="text">
-                 <string>Food Gathered</string>
+                 <string>Save Current CSV...</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="defaultPushButton1">
-                <property name="text">
-                 <string>PushButton</string>
+               <widget class="QPushButton" name="saveAllPushButton">
+                <property name="enabled">
+                 <bool>false</bool>
                 </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="defaultPushButton2">
                 <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="defaultPushButton3">
-                <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="defaultPushButton4">
-                <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="defaultPushButton5">
-                <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="defaultPushButton6">
-                <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="defaultPushButton7">
-                <property name="text">
-                 <string>PushButton</string>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QPushButton" name="exportAllPushButton">
-                <property name="text">
-                 <string>Export all</string>
+                 <string>Save All Figures...</string>
                 </property>
                </widget>
               </item>
@@ -286,7 +625,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QSpinBox" name="daySpinBox">
+                     <widget class="QSpinBox" name="dayPlotSpinBox">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -742,10 +1081,10 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton</sender>
+   <sender>loadCsvPushButton</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
-   <slot>browseSlot()</slot>
+   <slot>loadCsvSlot()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>938</x>
@@ -780,8 +1119,8 @@
    <slot>addAgentSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>885</x>
-     <y>259</y>
+     <x>933</x>
+     <y>367</y>
     </hint>
     <hint type="destinationlabel">
      <x>979</x>
@@ -797,7 +1136,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>921</x>
-     <y>534</y>
+     <y>513</y>
     </hint>
     <hint type="destinationlabel">
      <x>980</x>
@@ -806,7 +1145,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>daySpinBox</sender>
+   <sender>dayPlotSpinBox</sender>
    <signal>valueChanged(int)</signal>
    <receiver>horizontalSlider</receiver>
    <slot>setValue(int)</slot>
@@ -828,8 +1167,8 @@
    <slot>exportGifSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>885</x>
-     <y>294</y>
+     <x>945</x>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
      <x>978</x>
@@ -840,7 +1179,7 @@
   <connection>
    <sender>horizontalSlider</sender>
    <signal>valueChanged(int)</signal>
-   <receiver>daySpinBox</receiver>
+   <receiver>dayPlotSpinBox</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -861,7 +1200,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>921</x>
-     <y>556</y>
+     <y>542</y>
     </hint>
     <hint type="destinationlabel">
      <x>981</x>
@@ -877,7 +1216,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>921</x>
-     <y>578</y>
+     <y>571</y>
     </hint>
     <hint type="destinationlabel">
      <x>980</x>
@@ -893,7 +1232,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>933</x>
-     <y>372</y>
+     <y>282</y>
     </hint>
     <hint type="destinationlabel">
      <x>981</x>
@@ -909,7 +1248,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>933</x>
-     <y>688</y>
+     <y>684</y>
     </hint>
     <hint type="destinationlabel">
      <x>979</x>
@@ -925,7 +1264,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>933</x>
-     <y>742</y>
+     <y>741</y>
     </hint>
     <hint type="destinationlabel">
      <x>981</x>
@@ -940,8 +1279,8 @@
    <slot>addFilterSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>945</x>
-     <y>441</y>
+     <x>869</x>
+     <y>205</y>
     </hint>
     <hint type="destinationlabel">
      <x>879</x>
@@ -956,8 +1295,8 @@
    <slot>removeAllFiltersSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>910</x>
-     <y>461</y>
+     <x>869</x>
+     <y>208</y>
     </hint>
     <hint type="destinationlabel">
      <x>782</x>
@@ -972,8 +1311,8 @@
    <slot>filterParameterSelectedSlot()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>875</x>
-     <y>228</y>
+     <x>869</x>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel">
      <x>979</x>
@@ -989,187 +1328,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>933</x>
-     <y>480</y>
+     <y>452</y>
     </hint>
     <hint type="destinationlabel">
      <x>980</x>
      <y>335</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>exportAllPushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>exportAllSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>949</x>
-     <y>733</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>974</x>
-     <y>802</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultHealthPushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultHealthSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>854</x>
-     <y>184</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>992</x>
-     <y>175</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultShelterPushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultShelterSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>923</x>
-     <y>240</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>994</x>
-     <y>252</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultFoodPushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultFoodSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>878</x>
-     <y>291</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>993</x>
-     <y>320</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultPushButton1</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultPlaceholderSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>837</x>
-     <y>349</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>990</x>
-     <y>380</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultPushButton2</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultPlaceholderSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>917</x>
-     <y>408</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>992</x>
-     <y>431</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultPushButton3</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultPlaceholderSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>877</x>
-     <y>457</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>991</x>
-     <y>484</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultPushButton4</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultPlaceholderSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>872</x>
-     <y>507</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>992</x>
-     <y>549</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultPushButton5</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultPlaceholderSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>847</x>
-     <y>569</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>990</x>
-     <y>604</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultPushButton6</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultPlaceholderSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>898</x>
-     <y>627</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>993</x>
-     <y>654</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>defaultPushButton7</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>defaultPlaceholderSlot()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>859</x>
-     <y>680</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>994</x>
-     <y>745</y>
     </hint>
    </hints>
   </connection>
@@ -1189,9 +1352,264 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>saveAllPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveAllSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>865</x>
+     <y>653</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>992</x>
+     <y>662</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saveCsvPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveCsvSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>889</x>
+     <y>522</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>993</x>
+     <y>501</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>standardPlotComboBox</sender>
+   <signal>activated(QString)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>standardPlotSelectSlot(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>878</x>
+     <y>395</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>993</x>
+     <y>382</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>selectCsvComboBox</sender>
+   <signal>activated(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>csvSelectSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>847</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>990</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>loadProfilePushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>loadProfileSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>915</x>
+     <y>257</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>991</x>
+     <y>554</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>saveProfilePushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveProfileSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>879</x>
+     <y>378</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>990</x>
+     <y>479</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>runSimulationPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>runSimulationSlot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>853</x>
+     <y>581</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>978</x>
+     <y>800</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>balancedSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>balancedUpdateSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>266</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>328</x>
+     <y>803</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>idealistSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>idealistUpdateSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>233</x>
+     <y>405</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>235</x>
+     <y>802</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>egotistSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>egotistUpdateSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>462</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>188</x>
+     <y>797</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>susceptibleSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>idealistUpdateSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>226</x>
+     <y>537</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>3</x>
+     <y>728</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>idealistNSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>idealistNUpdateSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>222</x>
+     <y>596</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>992</x>
+     <y>609</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>egotistNSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>egotistNUpdateSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>239</x>
+     <y>656</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>995</x>
+     <y>646</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>susceptibleNSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>susceptibleNUpdateSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>724</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>993</x>
+     <y>736</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>daySpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>simDayUpdateSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>220</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>4</x>
+     <y>289</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>runSpinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>simRunUpdateSlot(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>199</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>5</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
-  <slot>browseSlot()</slot>
   <slot>returnPressedSlot()</slot>
   <slot>exportGifSlot()</slot>
   <slot>addLogSlot()</slot>
@@ -1202,7 +1620,6 @@
   <slot>plotTypeSlot()</slot>
   <slot>xAxisSlot()</slot>
   <slot>yAxisSlot()</slot>
-  <slot>exportAllSlot()</slot>
   <slot>addFilterSlot()</slot>
   <slot>removeAllFiltersSlot()</slot>
   <slot>filterParameterSelectedSlot()</slot>
@@ -1212,5 +1629,22 @@
   <slot>defaultShelterSlot()</slot>
   <slot>defaultPlaceholderSlot()</slot>
   <slot>dayChangedSlot(int)</slot>
+  <slot>saveAllSlot()</slot>
+  <slot>loadCsvSlot()</slot>
+  <slot>saveCsvSlot()</slot>
+  <slot>standardPlotSelectSlot(QString)</slot>
+  <slot>csvSelectSlot(int)</slot>
+  <slot>loadProfileSlot()</slot>
+  <slot>saveProfileSlot()</slot>
+  <slot>runSimulationSlot()</slot>
+  <slot>balancedUpdateSlot(int)</slot>
+  <slot>idealistUpdateSlot(int)</slot>
+  <slot>egotistUpdateSlot(int)</slot>
+  <slot>susceptibleUpdateSlot(int)</slot>
+  <slot>idealistNUpdateSlot(int)</slot>
+  <slot>egotistNUpdateSlot(int)</slot>
+  <slot>susceptibleNUpdateSlot(int)</slot>
+  <slot>simDayUpdateSlot(int)</slot>
+  <slot>simRunUpdateSlot(int)</slot>
  </slots>
 </ui>

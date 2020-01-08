@@ -5,11 +5,13 @@ from PyQt5.QtCore import QObject, pyqtSlot
 from gui import Ui_MainWindow
 from zipfile import ZipFile
 import sys
+import os
 from os import remove as DeleteFile
 import pandas as pd
 import matplotlib
 from matplotlib.figure import Figure
 from model import Model
+from shutil import copyfileobj
 
 class MainWindowUiClass(Ui_MainWindow):
     def __init__(self):
@@ -27,14 +29,17 @@ class MainWindowUiClass(Ui_MainWindow):
         total_agents = balanced + idealist + egotist + susceptible + idealistN + egotistN + suscpetibleN
         num_profiles = len(list(filter(lambda x: x != 0, [balanced, idealist, egotist, susceptible, idealistN, egotistN, suscpetibleN])))
         cmd = f"cd ../multi-agent-systems/Agent-Config ; printf \"{agent_init}\" > total_profiles.py ; python3 agent_init.py ; cd ../bin/Debug/netcoreapp3.0/ ; ./multi-agent-systems  --number-days {days} --number-profiles {num_profiles} --number-agents {total_agents} --number-runs {runs}"
-
         os.system(cmd)
+
+    def makeAgentProfiles(self, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN):
+        # make the json command bollocks happen
+        pass
 
     def filterPrint(self, msg):
         self.filterBrowser.append(msg)
 
     def refreshAll(self):
-        self.populateStandardComboBox()
+        self.populateStandardPlotComboBox()
         self.saveCsvPushButton.setEnabled(True)
         self.standardPlotComboBox.setEnabled(True)
         self.selectCsvComboBox.setEnabled(True)
@@ -76,14 +81,59 @@ class MainWindowUiClass(Ui_MainWindow):
             lst.append(x[0])
         self.selectCsvComboBox.addItems(lst)
 
+    def updateNumAgents(self):
+        balanced = self.model.getBalancedAgents()
+        idealist = self.model.getIdealistAgents()
+        egotist = self.model.getEgotistAgents()
+        susceptible = self.model.getSusceptibleAgents()
+        idealistN = self.model.getIdealistNAgents()
+        egotistN = self.model.getEgotistNAgents()
+        susceptibleN = self.model.getSusceptibleNAgents()
+        total = balanced + idealist + egotist + susceptible + idealistN + egotistN + susceptibleN
+        self.numAgentsLabel.setText(str(total))
+        if total > 0:
+            self.runSimulationPushButton.setEnabled(True)
+            self.simStatusLabel.setText("Ready!")
+        else:
+            self.runSimulationPushButton.setEnabled(False)
+            self.simStatusLabel.setText("Waiting")
+        self.simulationPlotWidget.agentDistribution(balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN, False)
 
     ######### slots ###########
+
+    def runSimulationSlot(self):
+
+        runs = self.model.getSimRuns()
+        days = self.model.getSimDays()
+        balanced = self.model.getBalancedAgents()
+        idealist = self.model.getIdealistAgents()
+        egotist = self.model.getEgotistAgents()
+        susceptible = self.model.getSusceptibleAgents()
+        idealistN = self.model.getIdealistNAgents()
+        egotistN = self.model.getEgotistNAgents()
+        susceptibleN = self.model.getSusceptibleNAgents()
+
+        self.runSimulation(runs, days, balanced, idealist, egotist, susceptible, idealistN, egotistN, susceptibleN)
+        self.model.clearLastSimulation()
+        self.model.addCurrentSimulation(runs)
+        self.simStatusLabel.setText("Done!")
+        self.addToCsvSelect()
+        self.selectCsvComboBox.setEnabled(True)
+
+    def agentUpdateSlot(self):
+        pass
+
+    def csvSelectSlot(self, index):
+        fileName = self.model.getCsvPath(index)
+        self.model.setFileName(fileName, False)
+        self.refreshAll()
+        self.selectCsvComboBox.setCurrentIndex(index)
 
     def returnPressedSlot(self):
         #self.debugPrint("enter pressed in line edit")
         fileName = self.lineEdit.text()
-        if self.model.setFileName(fileName):
-            self.model.setFileName(fileName)
+        if self.model.setFileName(fileName, True):
+            self.model.setFileName(fileName, True)
             self.refreshAll()
         else:
             m = QtWidgets.QMessageBox()
@@ -96,6 +146,83 @@ class MainWindowUiClass(Ui_MainWindow):
             self.refreshAll()
             self.debugPrint("Invalid file specified: " + fileName)
 
+    def loadProfileSlot(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(
+                        None,
+                        "Load Agent Setup",
+                        "",
+                        "Setup Files (*.setup);;All Files (*)",
+                        options=options)
+        
+        with open(fileName, "r") as f:
+            contents = f.readlines()
+            runs = int(contents[0])
+            days = int(contents[1])
+            balanced = int(contents[2])
+            idealist = int(contents[3])
+            egotist = int(contents[4])
+            susceptible = int(contents[5])
+            idealistN = int(contents[6])
+            egotistN = int(contents[7])
+            susceptibleN = int(contents[8])
+
+            self.model.updateSimRuns(runs)
+            self.model.updateSimDays(days)
+            self.model.updateBalancedAgents(balanced)
+            self.model.updateIdealistAgents(idealist)
+            self.model.updateEgotistAgents(egotist)
+            self.model.updateSusceptibleAgents(susceptible)
+            self.model.updateIdealistNAgents(idealistN)
+            self.model.updateEgotistNAgents(egotistN)
+            self.model.updateSusceptibleNAgents(susceptibleN)
+
+            self.runSpinBox.setValue(runs)
+            self.daySpinBox.setValue(days)
+            self.balancedSpinBox.setValue(balanced)
+            self.idealistSpinBox.setValue(idealist)
+            self.egotistSpinBox.setValue(egotist)
+            self.susceptibleSpinBox.setValue(susceptible)
+            self.idealistNSpinBox.setValue(idealistN)
+            self.egotistNSpinBox.setValue(egotistN)
+            self.susceptibleNSpinBox.setValue(susceptibleN)
+
+
+    def saveProfileSlot(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                                'Save Agent Setup',
+                                                "",
+                                                "Setup Files (*.setup);;All Files (*)",
+                                                options=options)
+        
+        if not fileName.endswith(".setup"):
+            fileName += ".setup"
+
+        runs = self.model.getSimRuns()
+        days = self.model.getSimDays()
+        balanced = self.model.getBalancedAgents()
+        idealist = self.model.getIdealistAgents()
+        egotist = self.model.getEgotistAgents()
+        susceptible = self.model.getSusceptibleAgents()
+        idealistN = self.model.getIdealistNAgents()
+        egotistN = self.model.getEgotistNAgents()
+        susceptibleN = self.model.getSusceptibleNAgents()
+        
+        with open(fileName, "w+") as f:
+            f.write(str(runs) + "\n")
+            f.write(str(days) + "\n")
+            f.write(str(balanced) + "\n")
+            f.write(str(idealist) + "\n")
+            f.write(str(egotist) + "\n")
+            f.write(str(susceptible) + "\n")
+            f.write(str(idealistN) + "\n")
+            f.write(str(egotistN) + "\n")
+            f.write(str(susceptibleN) + "\n")
+            
+
     def loadCsvSlot(self):
         #self.debugPrint("browse button pressed")
         options = QtWidgets.QFileDialog.Options()
@@ -107,9 +234,61 @@ class MainWindowUiClass(Ui_MainWindow):
                         "CSV Files (*.csv);;All Files (*)",
                         options=options)
         if fileName:
-            self.model.setFileName(fileName)
+            self.model.setFileName(fileName, True)
             self.refreshAll()
+
+    def saveCsvSlot(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        saveFile, _ = QtWidgets.QFileDialog.getSaveFileName(None,
+                                                'Save CSV',
+                                                "",
+                                                "CSV Files (*.csv);;All Files (*)",
+                                                options=options)
+        
+        if not saveFile.endswith(".csv"):
+            saveFile += ".csv"
+
+        
+        with open(saveFile, 'w+') as output, open(self.model.fileName, 'r') as input:
+            copyfileobj(input, output)
             
+    ####### simulation comboBoxes ##########
+
+    def simRunUpdateSlot(self, int):
+        self.model.updateSimRuns(int)
+
+    def simDayUpdateSlot(self, int):
+        self.model.updateSimDays(int)
+
+    def balancedUpdateSlot(self, int):
+        self.model.updateBalancedAgents(int)
+        self.updateNumAgents()
+
+    def egotistUpdateSlot(self, int):
+        self.model.updateEgotistAgents(int)
+        self.updateNumAgents()
+
+    def egotistNUpdateSlot(self, int):
+        self.model.updateEgotistNAgents(int)
+        self.updateNumAgents()
+
+    def idealistUpdateSlot(self, int):
+        self.model.updateIdealistAgents(int)
+        self.updateNumAgents()
+
+    def idealistNUpdateSlot(self, int):
+        self.model.updateIdealistNAgents(int)
+        self.updateNumAgents()
+
+    def susceptibleUpdateSlot(self, int):
+        self.model.updateSusceptibleAgents(int)
+        self.updateNumAgents()
+
+    def susceptibleNUpdateSlot(self, int):
+        self.model.updateSusceptibleNAgents(int)
+        self.updateNumAgents()
+
     def dayChangedSlot(self, value):
         self.model.updateDay(value)
 
@@ -209,27 +388,27 @@ class MainWindowUiClass(Ui_MainWindow):
 
     ############# standard plots ###############
 
-    def populateStandardPlotBox(self):
-        self.standardPlotBox.clear()
-        self.standardPlotBox.addItem("Average Energy and Agent Death")
-        self.standardPlotBox.addItem("Energy Distribution")
-        self.standardPlotBox.addItem("Idealism, Susceptibility and Egotism")
-        self.standardPlotBox.addItem("Fairness Distribution")
-        self.standardPlotBox.addItem("Average Infamy")
-        self.standardPlotBox.addItem("Infamy Distribution")
-        self.standardPlotBox.addItem("Crime Rate")
-        self.standardPlotBox.addItem("Crimes Committed")
-        self.standardPlotBox.addItem("Agent Activity")
-        self.standardPlotBox.addItem("Maximum Punishment Timeline")
-        self.standardPlotBox.addItem("Work Rule Timeline")
-        self.standardPlotBox.addItem("Food Rule Timeline")
-        self.standardPlotBox.addItem("Shelter Rule Timeline")
-        self.standardPlotBox.addItem("Voting Rule Timeline")
-        self.standardPlotBox.addItem("Maximum Punishment Distribution")
-        self.standardPlotBox.addItem("Work Rule Distribution")
-        self.standardPlotBox.addItem("Food Rule Distribution")
-        self.standardPlotBox.addItem("Shelter Rule Distribution")
-        self.standardPlotBox.addItem("Voting Rule Distribution")
+    def populateStandardPlotComboBox(self):
+        self.standardPlotComboBox.clear()
+        self.standardPlotComboBox.addItem("Average Energy and Agent Death")
+        self.standardPlotComboBox.addItem("Energy Distribution")
+        self.standardPlotComboBox.addItem("Idealism, Susceptibility and Egotism")
+        self.standardPlotComboBox.addItem("Fairness Distribution")
+        self.standardPlotComboBox.addItem("Average Infamy")
+        self.standardPlotComboBox.addItem("Infamy Distribution")
+        self.standardPlotComboBox.addItem("Crime Rate")
+        self.standardPlotComboBox.addItem("Crimes Committed")
+        self.standardPlotComboBox.addItem("Agent Activity")
+        self.standardPlotComboBox.addItem("Maximum Punishment Timeline")
+        self.standardPlotComboBox.addItem("Work Rule Timeline")
+        self.standardPlotComboBox.addItem("Food Rule Timeline")
+        self.standardPlotComboBox.addItem("Shelter Rule Timeline")
+        self.standardPlotComboBox.addItem("Voting Rule Timeline")
+        self.standardPlotComboBox.addItem("Maximum Punishment Distribution")
+        self.standardPlotComboBox.addItem("Work Rule Distribution")
+        self.standardPlotComboBox.addItem("Food Rule Distribution")
+        self.standardPlotComboBox.addItem("Shelter Rule Distribution")
+        self.standardPlotComboBox.addItem("Voting Rule Distribution")
         
 
     def standardPlotSelectSlot(self, plot):

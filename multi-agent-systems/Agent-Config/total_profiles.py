@@ -1,3 +1,3 @@
 from agent import *
 
-TotalProfiles = [(Balanced, 10), (Egotist, 10), (Idealist, 10), (Susceptible, 10), (NotIdealist, 10), (NotEgotist, 10), (NotSusceptible, 10)]
+TotalProfiles = list(filter(lambda x: x[1] != 0, [(Balanced, 1), (Egotist, 1), (Idealist, 1), (Susceptible, 1), (NotIdealist, 1), (NotEgotist, 1), (NotSusceptible, 0)]))
