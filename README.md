@@ -73,5 +73,5 @@ There are 3 ways at the moment:
 
 # Method 2 (GUI - only on Linux (and Mac?)) <-- currently on visualisation branch
 
-## 1. Build `dotnet build ./multi-agent-systems.sln`
-## 2. Run `python3 run.py` in the top level directory folder
+## 0. Build `dotnet build ./multi-agent-systems.sln`
+## 1. Run `python3 run.py` in the top level directory folder
